@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Alkitab Sempurna</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="favicon/favicon.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="favicon/favicon.png">
+    <style>
+        :root {
+            --primary-color: #3a5a78;
+            --secondary-color: #f1c40f;
+            --accent-color: #e74c3c;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+        }
+        body {
+            background: linear-gradient(135deg, #2c3e50, #4a69bd);
+            font-family: 'Open Sans', sans-serif;
+            color: #333;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 80px;
+        }
+        .bible-text { font-family: 'Merriweather', serif; }
+        header {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        header h1 {
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .sidebar {
+            background: linear-gradient(to bottom, #34495e, #2c3e50);
+            height: 100vh;
+            padding-top: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .sidebar:hover { transform: translateX(5px); }
+        .nav-link {
+            color: var(--light-color) !important;
+            font-size: 18px;
+            padding: 15px 20px;
+            transition: all 0.3s;
+            border-radius: 10px;
+            margin: 5px 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        .nav-link:hover::before { left: 100%; }
+        .nav-link:hover, .nav-link.active {
+            background: var(--secondary-color);
+            color: var(--dark-color) !important;
+            transform: translateX(10px);
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        .nav-link i { transition: transform 0.3s; }
+        .nav-link:hover i { transform: scale(1.2); }
+        .card {
+            border: none;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.98);
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+        }
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        .card-title {
+            color: var(--dark-color);
+            font-size: 28px;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--secondary-color);
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary:hover {
+            background-color: var(--dark-color);
+            border-color: var(--dark-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        .btn-primary:focus:not(:active)::after { animation: ripple 1s ease-out; }
+        @keyframes ripple {
+            0% { transform: scale(0, 0); opacity: 0.5; }
+            100% { transform: scale(20, 20); opacity: 0; }
+        }
+        .form-control {
+            border-radius: 10px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            transition: all 0.3s;
+            z-index: 1;
+        }
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(241, 196, 15, 0.25);
+        }
+        #verseResult, #dailyVerse, #searchResult {
+            font-style: italic;
+            color: var(--dark-color);
+            border-left: 5px solid var(--secondary-color);
+            background: #f8f9fa;
+            font-size: 18px;
+            line-height: 1.8;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+        }
+        #verseResult:hover, #dailyVerse:hover, #searchResult:hover {
+            transform: scale(1.01);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .list-group-item {
+            background: #f8f9fa;
+            border: none;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 16px;
+            padding: 15px;
+            transition: all 0.3s;
+        }
+        .list-group-item:hover {
+            background: var(--light-color);
+            transform: translateX(10px);
+        }
+        .section { display: none; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section.active { display: block; }
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            transform: translateX(150%);
+            transition: transform 0.5s ease;
+            max-width: 300px;
+        }
+        .notification.show { transform: translateX(0); }
+        .notification-close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .mobile-navbar {
+            border-radius: 20px 20px 0 0;
+            padding: 10px 0;
+            background: rgba(52, 58, 64, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        .mobile-navbar .nav-link {
+            color: white !important;
+            font-size: 14px;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .mobile-navbar .nav-link i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .mobile-navbar .nav-link:hover, .mobile-navbar .nav-link.active {
+            background: var(--secondary-color);
+            color: var(--dark-color) !important;
+        }
+        @media (max-width: 767px) {
+            .sidebar { transform: translateX(-100%); width: 80%; }
+            .sidebar.show { transform: translateX(0); }
+            .mobile-navbar { display: flex !important; }
+            .card { margin-bottom: 20px; }
+            .input-group { flex-direction: row; flex-wrap: nowrap; align-items: stretch; }
+            .input-group .form-control { flex: 1; margin-right: 10px; height: auto; }
+            .btn-primary, .input-group-text { width: auto; margin-bottom: 0; white-space: nowrap; }
+            header h1 { font-size: 24px; }
+            main { padding-bottom: 100px; }
+        }
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            z-index: 999;
+            transition: all 0.3s;
+        }
+        .fab:hover {
+            transform: scale(1.1) rotate(90deg);
+            background: #c0392b;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--secondary-color);
+            animation: spin 1s ease-in-out infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .audio-player {
+            margin-top: 20px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <header class="text-center py-4">
+            <h1 class="display-4 fw-bold text-white">
+                <i class="fas fa-bible me-2 animate__animated animate__pulse animate__infinite" style="animation-duration: 3s;"></i> 
+                <span class="bible-text">Aplikasi Alkitab Sempurna</span>
+            </h1>
+        </header>
+        
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-none d-md-block sidebar animate__animated animate__fadeInLeft">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-section="home">
+                            <i class="fas fa-bible me-2"></i> <span>Home</span>
+                            <span class="animate__animated animate__fadeInRight animate__delay-1s" style="position: absolute; right: 20px;">▶</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="special">
+                            <i class="fas fa-star me-2"></i> <span>Ayat Spesial</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="daily">
+                            <i class="fas fa-calendar-day me-2"></i> <span>Ayat Harian</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="history">
+                            <i class="fas fa-history me-2"></i> <span>Riwayat</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="text-center mt-4">
+                    <img src="image/favicon.png" alt="Bible" style="width: 80%; opacity: 0.7;" class="animate__animated animate__fadeInUp animate__delay-1s">
+                </div>
+            </nav>
+            
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div id="home" class="section active">
+                    <div class="card shadow-lg mt-4 animate__animated animate__fadeIn">
+                        <div class="card-body">
+                            <h2 class="card-title fw-semibold mb-4">
+                                <i class="fas fa-search me-2"></i>Cari Alkitab
+                            </h2>
+                            <div class="input-group mb-4">
+                                <input type="text" id="searchInput" class="form-control" placeholder="Cari ayat (contoh: Yohanes 1:2-12 atau Lukas)">
+                                <button class="btn btn-primary" onclick="searchBible()">
+                                    <i class="fas fa-search me-1"></i> Cari
+                                </button>
+                            </div>
+                            <div id="searchResult" class="p-4 bg-light rounded bible-text animate__animated"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="special" class="section">
+                    <div class="card shadow-lg mt-4">
+                        <div class="card-body">
+                            <h2 class="card-title fw-semibold mb-4">
+                                <i class="fas fa-star me-2"></i>Ayat Spesial
+                            </h2>
+                            <div class="input-group mb-4">
+                                <input type="text" id="nameInput" class="form-control" placeholder="Masukkan nama Anda">
+                                <button class="btn btn-primary" onclick="matchNameToVerse()">
+                                    <i class="fas fa-magic me-1"></i> Temukan Ayat
+                                </button>
+                            </div>
+                            <div id="specialLoading" class="text-center text-muted d-none">
+                                <div class="spinner"></div>
+                                <p>Mencari ayat spesial untuk Anda...</p>
+                            </div>
+                            <div id="verseResult" class="text-center p-4 bg-light rounded bible-text"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="daily" class="section">
+                    <div class="card shadow-lg mt-4">
+                        <div class="card-body text-center">
+                            <h2 class="card-title fw-semibold mb-4">
+                                <i class="fas fa-calendar-day me-2"></i>Ayat Harian
+                            </h2>
+                            <div id="dailyLoading" class="text-center text-muted">
+                                <div class="spinner"></div>
+                                <p>Memuat ayat harian...</p>
+                            </div>
+                            <p id="dailyVerse" class="lead bible-text p-4 bg-light rounded"></p>
+                            <div id="audioPlayer" class="audio-player d-none">
+                                <audio id="spiritualSong" controls></audio>
+                                <p id="songTitle" class="mt-2 text-muted"></p>
+                            </div>
+                            <button class="btn btn-primary mt-3" onclick="loadDailyVerse(true)">
+                                <i class="fas fa-sync-alt me-1"></i> Ayat Baru (Manual)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="history" class="section">
+                    <div class="card shadow-lg mt-4">
+                        <div class="card-body">
+                            <h2 class="card-title fw-semibold mb-4">
+                                <i class="fas fa-history me-2"></i>Riwayat Ayat
+                            </h2>
+                            <div class="d-flex justify-content-between mb-3">
+                                <h5 class="text-muted">Ayat yang pernah Anda cari:</h5>
+                                <button class="btn btn-sm btn-outline-danger" onclick="clearHistory()">
+                                    <i class="fas fa-trash me-1"></i> Hapus Riwayat
+                                </button>
+                            </div>
+                            <ul id="verseHistory" class="list-group"></ul>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        
+        <div class="fab d-md-none" id="menuFab">
+            <i class="fas fa-bars"></i>
+        </div>
+        
+        <nav class="navbar fixed-bottom navbar-dark mobile-navbar d-md-none">
+            <div class="container-fluid justify-content-around">
+                <a class="nav-link text-white" href="#" data-section="home">
+                    <i class="fas fa-bible"></i> <span>Home</span>
+                </a>
+                <a class="nav-link text-white" href="#" data-section="special">
+                    <i class="fas fa-star"></i> <span>Spesial</span>
+                </a>
+                <a class="nav-link text-white" href="#" data-section="daily">
+                    <i class="fas fa-calendar-day"></i> <span>Harian</span>
+                </a>
+                <a class="nav-link text-white" href="#" data-section="history">
+                    <i class="fas fa-history"></i> <span>Riwayat</span>
+                </a>
+            </div>
+        </nav>
+        
+        <div class="notification" id="notification">
+            <span class="notification-close" onclick="hideNotification()">×</span>
+            <div id="notificationContent"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_KEY = '61eaf8e1505573b47a2942cbfdfbf9cc';
+        const BASE_URL = 'https://api.scripture.api.bible/v1';
+        const BIBLE_ID = 'de4e12af7f28f599-01'; // Terjemahan Baru (TB) - Bahasa Indonesia
+
+        let userName = localStorage.getItem('userName') || null;
+        let verseHistory = JSON.parse(localStorage.getItem('verseHistory')) || [];
+        let dailyVerseData = JSON.parse(localStorage.getItem('dailyVerseData')) || null;
+
+        const bookCodes = {
+            'Kejadian': 'GEN', 'Keluaran': 'EXO', 'Imamat': 'LEV', 'Bilangan': 'NUM', 
+            'Ulangan': 'DEU', 'Yosua': 'JOS', 'Hakim-hakim': 'JDG', 'Rut': 'RUT', 
+            '1 Samuel': '1SA', '2 Samuel': '2SA', '1 Raja-raja': '1KI', '2 Raja-raja': '2KI', 
+            '1 Tawarikh': '1CH', '2 Tawarikh': '2CH', 'Ezra': 'EZR', 'Nehemia': 'NEH', 
+            'Ester': 'EST', 'Ayub': 'JOB', 'Mazmur': 'PSA', 'Amsal': 'PRO', 
+            'Pengkhotbah': 'ECC', 'Kidung Agung': 'SNG', 'Yesaya': 'ISA', 'Yeremia': 'JER', 
+            'Ratapan': 'LAM', 'Yehezkiel': 'EZK', 'Daniel': 'DAN', 'Hosea': 'HOS', 
+            'Yoel': 'JOL', 'Amos': 'AMO', 'Obaja': 'OBA', 'Yunus': 'JON', 
+            'Mikha': 'MIC', 'Nahum': 'NAM', 'Habakuk': 'HAB', 'Zefanya': 'ZEP', 
+            'Hagai': 'HAG', 'Zakharia': 'ZEC', 'Maleakhi': 'MAL', 'Matius': 'MAT', 
+            'Markus': 'MRK', 'Lukas': 'LUK', 'Yohanes': 'JHN', 'Kisah Para Rasul': 'ACT', 
+            'Roma': 'ROM', '1 Korintus': '1CO', '2 Korintus': '2CO', 'Galatia': 'GAL', 
+            'Efesus': 'EPH', 'Filipi': 'PHP', 'Kolose': 'COL', '1 Tesalonika': '1TH', 
+            '2 Tesalonika': '2TH', '1 Timotius': '1TI', '2 Timotius': '2TI', 'Titus': 'TIT', 
+            'Filemon': 'PHM', 'Ibrani': 'HEB', 'Yakobus': 'JAS', '1 Petrus': '1PE', 
+            '2 Petrus': '2PE', '1 Yohanes': '1JN', '2 Yohanes': '2JN', '3 Yohanes': '3JN', 
+            'Yudas': 'JUD', 'Wahyu': 'REV'
+        };
+
+        const books = Object.keys(bookCodes);
+
+        // Daftar 10 lagu rohani dengan path lokal
+        const spiritualSongs = [
+            { title: 'Penolong Yang setia', url: 'song/lagu1.mp3' },
+            { title: 'Pakai Aku Tuhan', url: 'song/lagu2.mp3' },
+            { title: 'Yesus Penolongku', url: 'song/Bless Trio - Yesus Penolongku (Lagu Rohani Manado).mp3' },
+            { title: 'KEPADAMU AKU BERDOA', url: 'song/KEPADAMU AKU BERDOA - Ellen Mamo ｜｜ Cipt.Sosipather Francescho.mp3' },
+            { title: 'Pakai Aku Tuhan', url: 'song/MITHA TALAHATU - Pakai Aku Tuhan (Official Video).mp3' },
+            { title: 'PADA SATU BUKIT', url: 'song/PADA SATU BUKIT - ALYCE AMBESA.mp3' },
+            { title: 'Sampaikan Pada Yesus', url: 'song/Sampaikan Pada Yesus - Melitha Sidabutar [Official Music Video] - Lagu Rohani.mp3' },
+            { title: 'Sentuh Hatiku', url: 'song/Sentuh Hatiku - Maria Shandi [Official Music Video] - Lagu Rohani.mp3' },
+            { title: 'Walau Ku Tak Dapat Melihat', url: 'song/Walau Ku Tak Dapat Melihat - Grezia Epiphania [Official Music Video].mp3' },
+            { title: 'Yesus pada-Mu Kuberseru', url: 'song/Yesus pada-Mu Kuberseru - OFFICIAL MUSIC VIDEO.mp3' },
+            { title: 'Yesus pada-Mu Kuberseru', url: 'song/Yesus pada-Mu Kuberseru - OFFICIAL MUSIC VIDEO.mp3' },
+
+        ];
+
+        function showNotification(message, duration = 5000) {
+            const notification = document.getElementById('notification');
+            const content = document.getElementById('notificationContent');
+            content.innerHTML = message;
+            notification.classList.add('show');
+            if (duration > 0) setTimeout(() => notification.classList.remove('show'), duration);
+        }
+
+        function hideNotification() {
+            document.getElementById('notification').classList.remove('show');
+        }
+
+        function showDeviceNotification(title, body) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(title, { body });
+            } else if ('Notification' in window && Notification.permission !== 'denied') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') new Notification(title, { body });
+                });
+            }
+            showNotification(`${title}: ${body}`, 8000);
+        }
+
+        async function translateToIndonesian(text) {
+            const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=id&dt=t&q=${encodeURIComponent(text)}`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                return data[0][0][0];
+            } catch (error) {
+                console.error('Error translating text:', error);
+                return text;
+            }
+        }
+
+        async function fetchVerse(book, chapter, verse) {
+            const bookCode = bookCodes[book];
+            const verseId = `${bookCode}.${chapter}.${verse}`;
+            const url = `${BASE_URL}/bibles/${BIBLE_ID}/verses/${verseId}?content-type=text`;
+            try {
+                const response = await fetch(url, { headers: { 'api-key': API_KEY } });
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                const data = await response.json();
+                const translatedText = await translateToIndonesian(data.data.content);
+                return { text: translatedText, ref: data.data.reference };
+            } catch (error) {
+                console.error(`Error fetching ${verseId}:`, error);
+                throw error;
+            }
+        }
+
+        async function fetchVerseRange(book, chapter, startVerse, endVerse) {
+            const bookCode = bookCodes[book];
+            let verses = [];
+            for (let verse = startVerse; verse <= endVerse; verse++) {
+                const verseId = `${bookCode}.${chapter}.${verse}`;
+                const url = `${BASE_URL}/bibles/${BIBLE_ID}/verses/${verseId}?content-type=text`;
+                try {
+                    const response = await fetch(url, { headers: { 'api-key': API_KEY } });
+                    if (response.ok) {
+                        const data = await response.json();
+                        const translatedText = await translateToIndonesian(data.data.content);
+                        verses.push({ text: translatedText, ref: data.data.reference });
+                    }
+                } catch (error) {
+                    console.error(`Error fetching ${verseId}:`, error);
+                }
+            }
+            return verses;
+        }
+
+        async function fetchRandomVerse() {
+            const randomBook = books[Math.floor(Math.random() * books.length)];
+            const randomChapter = Math.floor(Math.random() * 20) + 1;
+            const randomVerse = Math.floor(Math.random() * 30) + 1;
+            try {
+                const verse = await fetchVerse(randomBook, randomChapter, randomVerse);
+                return { 
+                    text: verse.text, 
+                    ref: `${randomBook} ${randomChapter}:${randomVerse}`,
+                    book: randomBook,
+                    chapter: randomChapter,
+                    verse: randomVerse
+                };
+            } catch {
+                return fetchRandomVerse();
+            }
+        }
+
+        async function searchBible() {
+            const query = document.getElementById('searchInput').value.trim();
+            const searchResult = document.getElementById('searchResult');
+            
+            if (!query) {
+                searchResult.textContent = 'Masukkan referensi ayat (contoh: Yohanes 1:2-12 atau Lukas)';
+                searchResult.classList.add('animate__shakeX');
+                setTimeout(() => searchResult.classList.remove('animate__shakeX'), 1000);
+                return;
+            }
+
+            searchResult.innerHTML = '<div class="spinner"></div><p>Mencari ayat...</p>';
+            searchResult.classList.remove('animate__fadeIn');
+
+            try {
+                const normalizedQuery = query.toLowerCase().replace(/\s+/g, ' ').trim();
+                let book = '';
+                let chapter = 1;
+                let startVerse = 1;
+                let endVerse = 1;
+
+                const bookMatch = books.find(b => b.toLowerCase() === normalizedQuery);
+                if (bookMatch) {
+                    book = bookMatch;
+                } else {
+                    const parts = normalizedQuery.split(' ');
+                    let chapterVersePart = '';
+                    for (let i = 0; i < parts.length; i++) {
+                        if (parts[i].match(/^\d+[:]\d+([-]\d+)?$/) || parts[i].match(/^\d+$/)) {
+                            chapterVersePart = parts.slice(i).join(' ');
+                            book = parts.slice(0, i).join(' ');
+                            break;
+                        }
+                        book += (book ? ' ' : '') + parts[i];
+                    }
+
+                    book = books.find(b => b.toLowerCase() === book.toLowerCase());
+                    if (!book) throw new Error(`Buku "${book}" tidak ditemukan di daftar.`);
+
+                    if (chapterVersePart) {
+                        if (chapterVersePart.includes('-')) {
+                            const [chapterStart, verseRange] = chapterVersePart.split(':');
+                            const [start, end] = verseRange.split('-');
+                            chapter = Number(chapterStart);
+                            startVerse = Number(start);
+                            endVerse = Number(end);
+                        } else if (chapterVersePart.includes(':')) {
+                            [chapter, startVerse] = chapterVersePart.split(':').map(Number);
+                            endVerse = startVerse;
+                        } else {
+                            chapter = Number(chapterVersePart);
+                        }
+                    }
+                }
+
+                if (!bookCodes[book]) throw new Error(`Kode buku untuk "${book}" tidak ditemukan.`);
+
+                let verseData, verses;
+                if (startVerse === endVerse) {
+                    verseData = await fetchVerse(book, chapter, startVerse);
+                    searchResult.innerHTML = `
+                        <div class="verse-content">
+                            <p class="verse-text">${verseData.text}</p>
+                            <p class="verse-reference text-end fw-bold mt-3">— ${verseData.ref}</p>
+                        </div>
+                    `;
+                } else {
+                    verses = await fetchVerseRange(book, chapter, startVerse, endVerse);
+                    if (verses.length === 0) throw new Error('Tidak ada ayat yang ditemukan dalam rentang ini.');
+                    searchResult.innerHTML = verses.map(verse => `
+                        <div class="verse-content">
+                            <p class="verse-text">${verse.text}</p>
+                            <p class="verse-reference text-end fw-bold mt-3">— ${verse.ref}</p>
+                        </div>
+                    `).join('<hr>');
+                }
+
+                searchResult.classList.add('animate__fadeIn');
+                
+                verseHistory.unshift({ 
+                    type: 'search', 
+                    query: query, 
+                    text: startVerse === endVerse ? verseData.text : verses.map(v => v.text).join('\n'),
+                    ref: startVerse === endVerse ? verseData.ref : `${book} ${chapter}:${startVerse}-${endVerse}`
+                });
+                if (verseHistory.length > 20) verseHistory.pop();
+                localStorage.setItem('verseHistory', JSON.stringify(verseHistory));
+                updateHistory();
+                
+            } catch (error) {
+                searchResult.textContent = `Gagal menemukan ayat: ${error.message}. Coba format: Lukas atau Yohanes 1:2-12`;
+                searchResult.classList.add('animate__shakeX');
+                setTimeout(() => searchResult.classList.remove('animate__shakeX'), 1000);
+            }
+        }
+
+        async function loadDailyVerse(forceNew = false) {
+            const dailyVerseEl = document.getElementById('dailyVerse');
+            const loadingEl = document.getElementById('dailyLoading');
+            const audioPlayer = document.getElementById('audioPlayer');
+            const spiritualSong = document.getElementById('spiritualSong');
+            const songTitle = document.getElementById('songTitle');
+            const now = new Date().getTime();
+            const oneDay = 24 * 60 * 60 * 1000;
+
+            loadingEl.classList.remove('d-none');
+            dailyVerseEl.classList.add('d-none');
+            audioPlayer.classList.add('d-none');
+
+            try {
+                if (!dailyVerseData || forceNew || (now - dailyVerseData.timestamp > oneDay)) {
+                    const verse = await fetchRandomVerse();
+                    const randomSong = spiritualSongs[Math.floor(Math.random() * spiritualSongs.length)];
+                    
+                    dailyVerseData = { 
+                        text: verse.text, 
+                        ref: verse.ref, 
+                        timestamp: now,
+                        song: randomSong
+                    };
+                    localStorage.setItem('dailyVerseData', JSON.stringify(dailyVerseData));
+                }
+                
+                dailyVerseEl.innerHTML = `
+                    <div class="verse-content">
+                        <p class="verse-text">${dailyVerseData.text}</p>
+                        <p class="verse-reference text-end fw-bold mt-3">— ${dailyVerseData.ref}</p>
+                    </div>
+                `;
+                
+                spiritualSong.src = dailyVerseData.song.url;
+                songTitle.textContent = `Lagu Rohani: ${dailyVerseData.song.title}`;
+                
+                loadingEl.classList.add('d-none');
+                dailyVerseEl.classList.remove('d-none');
+                audioPlayer.classList.remove('d-none');
+                dailyVerseEl.classList.add('animate__fadeIn');
+                audioPlayer.classList.add('animate__fadeIn');
+
+                spiritualSong.oncanplay = () => {
+                    spiritualSong.play().catch(error => {
+                        console.error('Error playing audio:', error);
+                        showNotification('Gagal memutar lagu rohani. Klik untuk memutar manual.');
+                        spiritualSong.controls = true;
+                    });
+                };
+                spiritualSong.onerror = () => {
+                    showNotification('File lagu tidak ditemukan atau rusak. Pastikan file ada di folder "song".');
+                    audioPlayer.classList.add('d-none');
+                };
+                
+                verseHistory.unshift({ type: 'daily', text: dailyVerseData.text, ref: dailyVerseData.ref });
+                if (verseHistory.length > 20) verseHistory.pop();
+                localStorage.setItem('verseHistory', JSON.stringify(verseHistory));
+                updateHistory();
+                
+                if (userName) showDeviceNotification('Ayat Harian Baru', `${dailyVerseData.text} (${dailyVerseData.ref})`);
+                
+            } catch (error) {
+                console.error('Error loading daily verse:', error);
+                loadingEl.innerHTML = '<p class="text-danger">Gagal memuat ayat harian. Silakan coba lagi.</p>';
+            }
+        }
+
+        async function matchNameToVerse() {
+            const name = document.getElementById('nameInput').value.trim();
+            const verseResult = document.getElementById('verseResult');
+            const loading = document.getElementById('specialLoading');
+            
+            if (!name) {
+                verseResult.textContent = 'Masukkan nama terlebih dahulu!';
+                verseResult.classList.add('animate__shakeX');
+                setTimeout(() => verseResult.classList.remove('animate__shakeX'), 1000);
+                return;
+            }
+            
+            if (!userName) {
+                userName = name;
+                localStorage.setItem('userName', userName);
+                showNotification(`Selamat datang, ${userName}! Anda akan menerima ayat harian setiap hari.`);
+            }
+            
+            loading.classList.remove('d-none');
+            verseResult.textContent = '';
+            
+            try {
+                const verse = await fetchRandomVerse();
+                
+                verseResult.innerHTML = `
+                    <h4 class="text-primary mb-3">Untuk ${name}:</h4>
+                    <div class="verse-content">
+                        <p class="verse-text">${verse.text}</p>
+                        <p class="verse-reference text-end fw-bold mt-3">— ${verse.ref}</p>
+                    </div>
+                `;
+                
+                verseHistory.unshift({ type: 'special', name: name, text: verse.text, ref: verse.ref });
+                if (verseHistory.length > 20) verseHistory.pop();
+                localStorage.setItem('verseHistory', JSON.stringify(verseHistory));
+                updateHistory();
+                
+            } catch (error) {
+                verseResult.textContent = 'Gagal memuat ayat spesial. Silakan coba lagi.';
+            } finally {
+                loading.classList.add('d-none');
+                verseResult.classList.add('animate__fadeIn');
+            }
+        }
+
+        function updateHistory() {
+            const historyList = document.getElementById('verseHistory');
+            historyList.innerHTML = verseHistory
+                .map((item, index) => {
+                    let content = '';
+                    if (item.type === 'search') content = `<strong>Pencarian:</strong> "${item.query}"<br>${item.text} (${item.ref})`;
+                    else if (item.type === 'special') content = `<strong>Ayat spesial untuk ${item.name}:</strong><br>${item.text} (${item.ref})`;
+                    else content = `<strong>Ayat harian:</strong><br>${item.text} (${item.ref})`;
+                    
+                    return `
+                        <li class="list-group-item animate__animated animate__fadeIn" style="animation-delay: ${index * 0.1}s">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>${content}</div>
+                                <button class="btn btn-sm btn-outline-primary" onclick="shareVerse('${item.text}', '${item.ref}')">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                            </div>
+                        </li>
+                    `;
+                })
+                .join('');
+        }
+
+        function shareVerse(text, reference) {
+            const shareText = `${text} - ${reference}\n\nDitemukan di Aplikasi Alkitab Sempurna`;
+            if (navigator.share) {
+                navigator.share({ title: 'Ayat Alkitab', text: shareText })
+                    .catch(err => { console.log('Error sharing:', err); copyToClipboard(shareText); });
+            } else {
+                copyToClipboard(shareText);
+            }
+        }
+
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showNotification('Ayat telah disalin ke clipboard!');
+        }
+
+        function clearHistory() {
+            showNotification(`
+                <div>Apakah Anda yakin ingin menghapus semua riwayat?</div>
+                <div class="mt-2">
+                    <button class="btn btn-sm btn-danger me-2" onclick="confirmClearHistory()">Ya</button>
+                    <button class="btn btn-sm btn-secondary" onclick="hideNotification()">Tidak</button>
+                </div>
+            `, 0);
+        }
+
+        function confirmClearHistory() {
+            verseHistory = [];
+            localStorage.setItem('verseHistory', JSON.stringify(verseHistory));
+            updateHistory();
+            showNotification('Riwayat telah dihapus', 3000);
+        }
+
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+                document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
+                const sectionId = link.getAttribute('data-section');
+                document.getElementById(sectionId).classList.add('active');
+                link.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        document.getElementById('menuFab').addEventListener('click', () => {
+            document.querySelector('.sidebar').classList.toggle('show');
+        });
+
+        window.onload = async () => {
+            await loadDailyVerse();
+            updateHistory();
+            if (userName) {
+                showNotification(`Selamat datang kembali, ${userName}!`, 5000);
+                setInterval(async () => {
+                    const now = new Date().getTime();
+                    if (!dailyVerseData || (now - dailyVerseData.timestamp > 24 * 60 * 60 * 1000)) {
+                        await loadDailyVerse(true);
+                    }
+                }, 60 * 1000);
+            }
+        };
+
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') searchBible();
+        });
+
+        document.getElementById('nameInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') matchNameToVerse();
+        });
+    </script>
+</body>
+</html>
