@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&family=Dancing+Script:wght@400&family=Cinzel:wght@400&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="favicon/favicon.png" sizes="32x32">
     <link rel="apple-touch-icon" href="favicon/favicon.png">
     <style>
@@ -86,6 +86,7 @@
             transition: all 0.4s ease;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            position: relative;
         }
         .card::before {
             content: '';
@@ -162,7 +163,7 @@
             border-color: var(--secondary-color);
             box-shadow: 0 0 0 0.25rem rgba(241, 196, 15, 0.25);
         }
-        #verseResult, #dailyVerse, #searchResult {
+        #verseResult, #dailyVerse, #searchResult, #prayerText, #aiResponse {
             font-style: italic;
             color: var(--dark-color);
             border-left: 5px solid var(--secondary-color);
@@ -173,7 +174,7 @@
             position: relative;
             z-index: 1;
         }
-        #verseResult:hover, #dailyVerse:hover, #searchResult:hover {
+        #verseResult:hover, #dailyVerse:hover, #searchResult:hover, #prayerText:hover, #aiResponse:hover {
             transform: scale(1.01);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
@@ -271,10 +272,8 @@
             transition: all 0.3s;
         }
         @media (max-width: 767px) {
-    .fab {
-        display: none !important;
-    }
-}
+            .fab { display: none !important; }
+        }
         .spinner {
             width: 40px;
             height: 40px;
@@ -352,6 +351,54 @@
             color: #6c757d;
             margin-bottom: 10px;
         }
+        /* Premium Explanation Styles */
+        .explanation-text {
+            text-align: justify;
+            text-align-last: center;
+            font-size: 16px;
+            line-height: 1.6;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        .explanation-text strong {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        /* Settings Toggle Button */
+        .settings-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--secondary-color);
+            color: var(--dark-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+            z-index: 10;
+        }
+        .settings-btn:hover { transform: scale(1.1); }
+        /* Settings Panel */
+        .settings-panel {
+            display: none;
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            width: 250px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            z-index: 1000;
+        }
+        .settings-panel.show { display: block; }
     </style>
 </head>
 <body>
@@ -397,6 +444,29 @@
                 <div id="home" class="section active">
                     <div class="card shadow-lg mt-4 animate__animated animate__fadeIn">
                         <div class="card-body">
+                            <!-- Settings Toggle Button -->
+                            <div class="settings-btn" id="settingsBtn">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <!-- Settings Panel -->
+                            <div id="settingsPanel" class="settings-panel">
+                                <h5>Pengaturan</h5>
+                                <label for="themeSelect">Tema:</label>
+                                <select id="themeSelect" class="form-control mb-2" onchange="applyTheme()">
+                                    <option value="default">Default</option>
+                                    <option value="dark">Gelap</option>
+                                    <option value="light">Terang</option>
+                                </select>
+                                <label for="customBackground">Custom Background:</label>
+                                <input type="color" id="customBackground" class="form-control mb-2" onchange="applyCustomBackground()">
+                                <label for="fontSelect">Font:</label>
+                                <select id="fontSelect" class="form-control mb-2" onchange="applyFont()">
+                                    <option value="merriweather">Merriweather (Default)</option>
+                                    <option value="dancing-script">Dancing Script (Elegan)</option>
+                                    <option value="cinzel">Cinzel (Premium)</option>
+                                </select>
+                            </div>
+
                             <h2 class="card-title fw-semibold mb-4">
                                 <i class="fas fa-search me-2"></i>Cari Alkitab
                             </h2>
@@ -407,6 +477,23 @@
                                 </button>
                             </div>
                             <div id="searchResult" class="p-4 bg-light rounded bible-text animate__animated"></div>
+
+                            <!-- AI Assistant -->
+                            <h2 class="card-title fw-semibold mb-4 mt-5">
+                                <i class="fas fa-robot me-2"></i>AI Assistant Rohani
+                            </h2>
+                            <div class="input-group mb-3">
+                                <input type="text" id="aiQuestion" class="form-control" placeholder="Tanyakan tentang Alkitab atau hal rohani...">
+                                <button class="btn btn-primary" onclick="askAI()">Tanya</button>
+                            </div>
+                            <div id="aiResponse" class="p-4 bg-light rounded bible-text"></div>
+
+                            <!-- Doa Harian -->
+                            <h2 class="card-title fw-semibold mb-4 mt-5">
+                                <i class="fas fa-pray me-2"></i>Doa Harian
+                            </h2>
+                            <p id="prayerText" class="p-4 bg-light rounded"></p>
+                            <button class="btn btn-primary mt-3" onclick="generatePrayer()">Generate Doa Baru</button>
                         </div>
                     </div>
                 </div>
@@ -541,6 +628,8 @@
         const API_KEY = '61eaf8e1505573b47a2942cbfdfbf9cc';
         const BASE_URL = 'https://api.scripture.api.bible/v1';
         const BIBLE_ID = 'de4e12af7f28f599-01'; // Terjemahan Baru (TB) - Bahasa Indonesia
+        const GEMINI_API_KEY = 'AIzaSyBvxIy4Ki43eOOHBg5QRp5gSPMBQdNx9lQ';
+        const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
         let userName = localStorage.getItem('userName') || null;
         let verseHistory = JSON.parse(localStorage.getItem('verseHistory')) || [];
@@ -632,7 +721,6 @@
                 cover: 'image/sampai.png',
                 url: 'song/Sampaikan Pada Yesus - Melitha Sidabutar [Official Music Video] - Lagu Rohani.mp3' 
             },
-            
         ];
 
         function initMusicPlayer() {
@@ -815,6 +903,42 @@
             }
         }
 
+        function formatExplanation(text) {
+            return text.replace(/\*\*\*(.*?)\*\*\*/g, '<strong>$1</strong>');
+        }
+
+        async function getAIExplanation(verseText, verseRef, type = 'daily', name = null) {
+            let prompt = '';
+            if (type === 'daily') {
+                prompt = `Jelaskan makna dari ayat Injil berikut: "${verseText}" (${verseRef}). Berikan penjelasan tentang firman tersebut, serta tambahkan motivasi dan relevansi dalam kehidupan manusia berdasarkan ayat ini. Gunakan tanda *** untuk menegaskan poin penting dalam penjelasan. Tulis dalam bahasa Indonesia.`;
+            } else if (type === 'special' && name) {
+                prompt = `Berikan ayat spesial untuk ${name}. Jelaskan makna dari ayat Injil berikut: "${verseText}" (${verseRef}). Berikan penjelasan yang relevan dengan kehidupan ${name}, serta motivasi khusus untuk ${name} berdasarkan ayat ini. Gunakan tanda *** untuk menegaskan poin penting dalam penjelasan. Tulis dalam bahasa Indonesia.`;
+            } else if (type === 'prayer') {
+                prompt = `Buat doa harian berdasarkan ayat Injil berikut: "${verseText}" (${verseRef}). Doa harus singkat, penuh makna, dan relevan dengan ayat tersebut. Tulis dalam bahasa Indonesia.`;
+            }
+            
+            try {
+                const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: prompt }]
+                        }]
+                    })
+                });
+
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                const data = await response.json();
+                return type === 'prayer' ? data.candidates[0].content.parts[0].text : formatExplanation(data.candidates[0].content.parts[0].text);
+            } catch (error) {
+                console.error('Error fetching AI explanation:', error);
+                return type === 'prayer' ? 'Gagal membuat doa. Silakan coba lagi.' : 'Gagal memuat penjelasan dari AI. Silakan coba lagi nanti.';
+            }
+        }
+
         async function searchBible() {
             const query = document.getElementById('searchInput').value.trim();
             const searchResult = document.getElementById('searchResult');
@@ -923,21 +1047,25 @@
             audioPlayer.classList.add('d-none');
 
             try {
-                let verse;
+                let verse, explanation;
                 if (!dailyVerseData || forceNew || (now - dailyVerseData.timestamp > oneDay)) {
                     verse = await fetchRandomVerse();
+                    explanation = await getAIExplanation(verse.text, verse.ref, 'daily');
                     const randomSongIndex = Math.floor(Math.random() * spiritualSongs.length);
                     
                     dailyVerseData = { 
                         text: verse.text, 
                         ref: verse.ref, 
+                        explanation: explanation,
                         timestamp: now,
                         songIndex: randomSongIndex
                     };
                     localStorage.setItem('dailyVerseData', JSON.stringify(dailyVerseData));
                 } else {
                     verse = { text: dailyVerseData.text, ref: dailyVerseData.ref };
-                    // Jika tidak forceNew tapi lagu belum diacak hari ini, acak lagu baru
+                    explanation = dailyVerseData.explanation || await getAIExplanation(verse.text, verse.ref, 'daily');
+                    dailyVerseData.explanation = explanation;
+                    localStorage.setItem('dailyVerseData', JSON.stringify(dailyVerseData));
                     if (!dailyVerseData.songIndex || forceNew) {
                         dailyVerseData.songIndex = Math.floor(Math.random() * spiritualSongs.length);
                         localStorage.setItem('dailyVerseData', JSON.stringify(dailyVerseData));
@@ -948,13 +1076,14 @@
                     <div class="verse-content">
                         <p class="verse-text">${verse.text}</p>
                         <p class="verse-reference text-end fw-bold mt-3">— ${verse.ref}</p>
+                        <hr>
+                        <h5 class="mt-3 text-primary">Penjelasan dan Motivasi:</h5>
+                        <p class="explanation-text">${explanation}</p>
                     </div>
                 `;
                 
-                // Initialize and play random song
                 if (!currentSong) initMusicPlayer();
                 if (forceNew) {
-                    // Hentikan lagu yang sedang berjalan jika ada
                     if (isPlaying) {
                         currentSong.pause();
                         isPlaying = false;
@@ -972,12 +1101,15 @@
                 dailyVerseEl.classList.add('animate__fadeIn');
                 audioPlayer.classList.add('animate__fadeIn');
                 
-                verseHistory.unshift({ type: 'daily', text: verse.text, ref: verse.ref });
+                verseHistory.unshift({ type: 'daily', text: verse.text, ref: verse.ref, explanation: explanation });
                 if (verseHistory.length > 20) verseHistory.pop();
                 localStorage.setItem('verseHistory', JSON.stringify(verseHistory));
                 updateHistory();
                 
                 if (userName && forceNew) showDeviceNotification('Ayat Harian Baru', `${verse.text} (${verse.ref})`);
+                
+                // Load initial prayer based on daily verse
+                if (!document.getElementById('prayerText').innerText) generatePrayer();
                 
             } catch (error) {
                 console.error('Error loading daily verse:', error);
@@ -1008,16 +1140,20 @@
             
             try {
                 const verse = await fetchRandomVerse();
+                const explanation = await getAIExplanation(verse.text, verse.ref, 'special', name);
                 
                 verseResult.innerHTML = `
-                    <h4 class="text-primary mb-3">Untuk ${name}:</h4>
+                    <h4 class="text-primary mb-3">Ayat Spesial untuk ${name}:</h4>
                     <div class="verse-content">
                         <p class="verse-text">${verse.text}</p>
                         <p class="verse-reference text-end fw-bold mt-3">— ${verse.ref}</p>
+                        <hr>
+                        <h5 class="mt-3 text-primary">Penjelasan untuk ${name}:</h5>
+                        <p class="explanation-text">${explanation}</p>
                     </div>
                 `;
                 
-                verseHistory.unshift({ type: 'special', name: name, text: verse.text, ref: verse.ref });
+                verseHistory.unshift({ type: 'special', name: name, text: verse.text, ref: verse.ref, explanation: explanation });
                 if (verseHistory.length > 20) verseHistory.pop();
                 localStorage.setItem('verseHistory', JSON.stringify(verseHistory));
                 updateHistory();
@@ -1036,8 +1172,8 @@
                 .map((item, index) => {
                     let content = '';
                     if (item.type === 'search') content = `<strong>Pencarian:</strong> "${item.query}"<br>${item.text} (${item.ref})`;
-                    else if (item.type === 'special') content = `<strong>Ayat spesial untuk ${item.name}:</strong><br>${item.text} (${item.ref})`;
-                    else content = `<strong>Ayat harian:</strong><br>${item.text} (${item.ref})`;
+                    else if (item.type === 'special') content = `<strong>Ayat spesial untuk ${item.name}:</strong><br>${item.text} (${item.ref})<br><strong>Penjelasan:</strong> ${item.explanation}`;
+                    else content = `<strong>Ayat harian:</strong><br>${item.text} (${item.ref})<br><strong>Penjelasan:</strong> ${item.explanation}`;
                     
                     return `
                         <li class="list-group-item animate__animated animate__fadeIn" style="animation-delay: ${index * 0.1}s">
@@ -1090,6 +1226,86 @@
             showNotification('Riwayat telah dihapus', 3000);
         }
 
+        // Settings Functions
+        document.getElementById('settingsBtn').addEventListener('click', function() {
+            const panel = document.getElementById('settingsPanel');
+            panel.classList.toggle('show');
+        });
+
+        function applyTheme() {
+            const theme = document.getElementById('themeSelect').value;
+            if (theme === 'dark') {
+                document.body.style.background = 'linear-gradient(135deg, #1a1a2e, #16213e)';
+            } else if (theme === 'light') {
+                document.body.style.background = 'linear-gradient(135deg, #f1c40f, #d4a017)';
+            } else {
+                document.body.style.background = 'linear-gradient(135deg, #2c3e50, #4a69bd)';
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        function applyCustomBackground() {
+            const color = document.getElementById('customBackground').value;
+            document.body.style.background = color;
+            localStorage.setItem('customBackground', color);
+        }
+
+        function applyFont() {
+            const font = document.getElementById('fontSelect').value;
+            let fontFamily = 'Merriweather';
+            if (font === 'dancing-script') fontFamily = 'Dancing Script';
+            else if (font === 'cinzel') fontFamily = 'Cinzel';
+            document.querySelectorAll('.bible-text').forEach(el => el.style.fontFamily = `'${fontFamily}', serif`);
+            localStorage.setItem('font', font);
+        }
+
+        // AI Assistant Function (Limited to Spiritual/Alkitab Questions)
+        async function askAI() {
+            const question = document.getElementById('aiQuestion').value.trim();
+            const aiResponse = document.getElementById('aiResponse');
+            if (!question) {
+                aiResponse.textContent = 'Masukkan pertanyaan rohani terlebih dahulu!';
+                return;
+            }
+
+            const spiritualKeywords = ['alkitab', 'ayat', 'yesus', 'tuhan', 'doa', 'rohani', 'injil', 'firman', 'kasih', 'harapan', 'iman'];
+            const isSpiritual = spiritualKeywords.some(keyword => question.toLowerCase().includes(keyword));
+            if (!isSpiritual) {
+                aiResponse.textContent = 'Maaf, saya hanya bisa menjawab pertanyaan rohani terkait Alkitab. Silakan ajukan pertanyaan tentang Alkitab atau kehidupan rohani.';
+                return;
+            }
+
+            aiResponse.innerHTML = '<div class="spinner"></div><p>Menjawab...</p>';
+            try {
+                const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ text: `Jawab dalam bahasa Indonesia hanya jika pertanyaan terkait Alkitab atau kehidupan rohani: ${question}` }]
+                        }]
+                    })
+                });
+                const data = await response.json();
+                aiResponse.textContent = data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                aiResponse.textContent = 'Gagal mendapatkan jawaban. Coba lagi nanti.';
+            }
+        }
+
+        // Prayer Function
+        async function generatePrayer() {
+            const prayerText = document.getElementById('prayerText');
+            prayerText.innerHTML = '<div class="spinner"></div><p>Membuat doa...</p>';
+            try {
+                const verse = dailyVerseData ? { text: dailyVerseData.text, ref: dailyVerseData.ref } : await fetchRandomVerse();
+                const prayer = await getAIExplanation(verse.text, verse.ref, 'prayer');
+                prayerText.textContent = prayer;
+            } catch (error) {
+                prayerText.textContent = 'Gagal membuat doa. Silakan coba lagi.';
+            }
+        }
+
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -1119,6 +1335,19 @@
                     }
                 }, 60 * 1000);
             }
+            // Apply saved settings
+            if (localStorage.getItem('theme')) {
+                document.getElementById('themeSelect').value = localStorage.getItem('theme');
+                applyTheme();
+            }
+            if (localStorage.getItem('customBackground')) {
+                document.getElementById('customBackground').value = localStorage.getItem('customBackground');
+                applyCustomBackground();
+            }
+            if (localStorage.getItem('font')) {
+                document.getElementById('fontSelect').value = localStorage.getItem('font');
+                applyFont();
+            }
         };
 
         document.getElementById('searchInput').addEventListener('keypress', (e) => {
@@ -1127,6 +1356,10 @@
 
         document.getElementById('nameInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') matchNameToVerse();
+        });
+
+        document.getElementById('aiQuestion').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') askAI();
         });
     </script>
 </body>
