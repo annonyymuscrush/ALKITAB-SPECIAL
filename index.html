@@ -270,10 +270,11 @@
             z-index: 999;
             transition: all 0.3s;
         }
-        .fab:hover {
-            transform: scale(1.1) rotate(90deg);
-            background: #c0392b;
-        }
+        @media (max-width: 767px) {
+    .fab {
+        display: none !important;
+    }
+}
         .spinner {
             width: 40px;
             height: 40px;
@@ -284,13 +285,72 @@
             margin: 20px auto;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .audio-player {
-            margin-top: 20px;
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
+        
+        /* Enhanced Music Player Styles */
+        .music-player {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            z-index: 1;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        .music-player:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        .progress {
+            cursor: pointer;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 5px;
+        }
+        .progress-bar {
+            transition: width 0.1s linear;
+            background-color: var(--secondary-color);
+        }
+        .volume-control {
+            display: flex;
+            align-items: center;
+        }
+        #likeBtn {
+            transition: all 0.3s;
+        }
+        #playBtn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+        }
+        #playBtn:hover {
+            transform: scale(1.1);
+        }
+        .song-info {
+            text-align: left;
+        }
+        .song-info h5 {
+            margin-bottom: 0;
+            font-weight: 600;
+        }
+        .song-info small {
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -383,9 +443,45 @@
                                 <p>Memuat ayat harian...</p>
                             </div>
                             <p id="dailyVerse" class="lead bible-text p-4 bg-light rounded"></p>
-                            <div id="audioPlayer" class="audio-player d-none">
-                                <audio id="spiritualSong" controls></audio>
-                                <p id="songTitle" class="mt-2 text-muted"></p>
+                            <div id="audioPlayer" class="d-none">
+                                <div class="music-player">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <img id="songCover" src="image/music-cover.jpg" alt="Album Cover" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                            <div class="song-info">
+                                                <h5 id="songTitle" class="mb-0">Lagu Rohani</h5>
+                                                <small id="songArtist" class="text-muted">Pujian Kristen</small>
+                                            </div>
+                                            <button id="likeBtn" class="btn btn-sm btn-outline-danger ms-auto">
+                                                <i class="far fa-heart"></i>
+                                            </button>
+                                        </div>
+                                        <div class="progress mb-2">
+                                            <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                        </div>
+                                        <div class="time-display">
+                                            <small id="currentTime">0:00</small>
+                                            <small id="duration">0:00</small>
+                                        </div>
+                                        <div class="player-controls">
+                                            <button id="prevBtn" class="btn btn-outline-secondary mx-2">
+                                                <i class="fas fa-step-backward"></i>
+                                            </button>
+                                            <button id="playBtn" class="btn btn-primary mx-2">
+                                                <i class="fas fa-play"></i>
+                                            </button>
+                                            <button id="nextBtn" class="btn btn-outline-secondary mx-2">
+                                                <i class="fas fa-step-forward"></i>
+                                            </button>
+                                        </div>
+                                        <div class="d-flex justify-content-end mt-3">
+                                            <div class="volume-control">
+                                                <i class="fas fa-volume-up me-2"></i>
+                                                <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.7" style="width: 100px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <button class="btn btn-primary mt-3" onclick="loadDailyVerse(true)">
                                 <i class="fas fa-sync-alt me-1"></i> Ayat Baru (Manual)
@@ -449,6 +545,9 @@
         let userName = localStorage.getItem('userName') || null;
         let verseHistory = JSON.parse(localStorage.getItem('verseHistory')) || [];
         let dailyVerseData = JSON.parse(localStorage.getItem('dailyVerseData')) || null;
+        let currentSongIndex = 0;
+        let isPlaying = false;
+        let currentSong = null;
 
         const bookCodes = {
             'Kejadian': 'GEN', 'Keluaran': 'EXO', 'Imamat': 'LEV', 'Bilangan': 'NUM', 
@@ -472,21 +571,129 @@
 
         const books = Object.keys(bookCodes);
 
-        // Daftar 10 lagu rohani dengan path lokal
         const spiritualSongs = [
-            { title: 'Penolong Yang setia', url: 'song/lagu1.mp3' },
-            { title: 'Pakai Aku Tuhan', url: 'song/lagu2.mp3' },
-            { title: 'Yesus Penolongku', url: 'song/Bless Trio - Yesus Penolongku (Lagu Rohani Manado).mp3' },
-            { title: 'KEPADAMU AKU BERDOA', url: 'song/KEPADAMU AKU BERDOA - Ellen Mamo ｜｜ Cipt.Sosipather Francescho.mp3' },
-            { title: 'Pakai Aku Tuhan', url: 'song/MITHA TALAHATU - Pakai Aku Tuhan (Official Video).mp3' },
-            { title: 'PADA SATU BUKIT', url: 'song/PADA SATU BUKIT - ALYCE AMBESA.mp3' },
-            { title: 'Sampaikan Pada Yesus', url: 'song/Sampaikan Pada Yesus - Melitha Sidabutar [Official Music Video] - Lagu Rohani.mp3' },
-            { title: 'Sentuh Hatiku', url: 'song/Sentuh Hatiku - Maria Shandi [Official Music Video] - Lagu Rohani.mp3' },
-            { title: 'Walau Ku Tak Dapat Melihat', url: 'song/Walau Ku Tak Dapat Melihat - Grezia Epiphania [Official Music Video].mp3' },
-            { title: 'Yesus pada-Mu Kuberseru', url: 'song/Yesus pada-Mu Kuberseru - OFFICIAL MUSIC VIDEO.mp3' },
-            { title: 'Yesus pada-Mu Kuberseru', url: 'song/Yesus pada-Mu Kuberseru - OFFICIAL MUSIC VIDEO.mp3' },
-
+            { 
+                title: 'Penolong Yang Setia', 
+                artist: 'Melitha Sidabutar', 
+                cover: 'image/penolongsetia.png',
+                url: 'song/lagu1.mp3' 
+            },
+            { 
+                title: 'Indah Pada Waktunya', 
+                artist: 'Putri Siagian', 
+                cover: 'image/indahpadawaktunya.png',
+                url: 'song/lagu2.mp3' 
+            },
+            { 
+                title: 'Yesus Penolongku', 
+                artist: 'Bless Trio', 
+                cover: 'image/yesuspenolongku.png',
+                url: 'Bless Trio - Yesus Penolongku (Lagu Rohani Manado).mp3' 
+            },
+            { 
+                title: 'KEPADAMU AKU BERDOA', 
+                artist: 'Ellen Mamo', 
+                cover: 'image/kepadamuakuberdoa.png',
+                url: 'KEPADAMU AKU BERDOA - Ellen Mamo ｜｜ Cipt.Sosipather Francescho.mp3' 
+            },
+            { 
+                title: 'Pakai Aku Tuhan', 
+                artist: 'MITHA TALAHATU', 
+                cover: 'image/pakaiakutuhan.png',
+                url: 'MITHA TALAHATU - Pakai Aku Tuhan (Official Video).mp3' 
+            }
         ];
+
+        function initMusicPlayer() {
+            const audioElement = document.createElement('audio');
+            audioElement.id = 'spiritualSong';
+            document.body.appendChild(audioElement);
+            currentSong = audioElement;
+
+            document.getElementById('playBtn').addEventListener('click', togglePlay);
+            document.getElementById('prevBtn').addEventListener('click', playPrevious);
+            document.getElementById('nextBtn').addEventListener('click', playNext);
+            document.getElementById('volumeSlider').addEventListener('input', setVolume);
+            document.getElementById('likeBtn').addEventListener('click', toggleLike);
+            
+            currentSong.addEventListener('timeupdate', updateProgress);
+            currentSong.addEventListener('ended', playNext);
+            currentSong.addEventListener('loadedmetadata', updateDuration);
+            
+            document.querySelector('.progress').addEventListener('click', (e) => {
+                const progressBar = document.querySelector('.progress');
+                const percent = e.offsetX / progressBar.offsetWidth;
+                currentSong.currentTime = percent * currentSong.duration;
+            });
+        }
+
+        function togglePlay() {
+            if (isPlaying) {
+                currentSong.pause();
+                document.getElementById('playBtn').innerHTML = '<i class="fas fa-play"></i>';
+            } else {
+                currentSong.play().catch(e => console.error('Playback failed:', e));
+                document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function playSong(songIndex) {
+            if (songIndex < 0) songIndex = spiritualSongs.length - 1;
+            if (songIndex >= spiritualSongs.length) songIndex = 0;
+            
+            currentSongIndex = songIndex;
+            const song = spiritualSongs[currentSongIndex];
+            
+            currentSong.src = song.url;
+            document.getElementById('songTitle').textContent = song.title;
+            document.getElementById('songArtist').textContent = song.artist;
+            document.getElementById('songCover').src = song.cover || 'image/music-cover.jpg';
+            
+            if (isPlaying) {
+                currentSong.play().catch(e => console.error('Playback failed:', e));
+            } else {
+                currentSong.play().catch(e => console.error('Playback failed:', e));
+                isPlaying = true;
+                document.getElementById('playBtn').innerHTML = '<i class="fas fa-pause"></i>';
+            }
+        }
+
+        function playNext() {
+            playSong(currentSongIndex + 1);
+        }
+
+        function playPrevious() {
+            playSong(currentSongIndex - 1);
+        }
+
+        function updateProgress() {
+            const progressPercent = (currentSong.currentTime / currentSong.duration) * 100;
+            document.getElementById('progressBar').style.width = `${progressPercent}%`;
+            document.getElementById('currentTime').textContent = formatTime(currentSong.currentTime);
+        }
+
+        function updateDuration() {
+            document.getElementById('duration').textContent = formatTime(currentSong.duration);
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        function setVolume() {
+            currentSong.volume = this.value;
+        }
+
+        function toggleLike() {
+            this.classList.toggle('btn-danger');
+            this.classList.toggle('btn-outline-danger');
+            const icon = this.querySelector('i');
+            icon.classList.toggle('far');
+            icon.classList.toggle('fas');
+        }
 
         function showNotification(message, duration = 5000) {
             const notification = document.getElementById('notification');
@@ -677,8 +884,6 @@
             const dailyVerseEl = document.getElementById('dailyVerse');
             const loadingEl = document.getElementById('dailyLoading');
             const audioPlayer = document.getElementById('audioPlayer');
-            const spiritualSong = document.getElementById('spiritualSong');
-            const songTitle = document.getElementById('songTitle');
             const now = new Date().getTime();
             const oneDay = 24 * 60 * 60 * 1000;
 
@@ -687,53 +892,61 @@
             audioPlayer.classList.add('d-none');
 
             try {
+                let verse;
                 if (!dailyVerseData || forceNew || (now - dailyVerseData.timestamp > oneDay)) {
-                    const verse = await fetchRandomVerse();
-                    const randomSong = spiritualSongs[Math.floor(Math.random() * spiritualSongs.length)];
+                    verse = await fetchRandomVerse();
+                    const randomSongIndex = Math.floor(Math.random() * spiritualSongs.length);
                     
                     dailyVerseData = { 
                         text: verse.text, 
                         ref: verse.ref, 
                         timestamp: now,
-                        song: randomSong
+                        songIndex: randomSongIndex
                     };
                     localStorage.setItem('dailyVerseData', JSON.stringify(dailyVerseData));
+                } else {
+                    verse = { text: dailyVerseData.text, ref: dailyVerseData.ref };
+                    // Jika tidak forceNew tapi lagu belum diacak hari ini, acak lagu baru
+                    if (!dailyVerseData.songIndex || forceNew) {
+                        dailyVerseData.songIndex = Math.floor(Math.random() * spiritualSongs.length);
+                        localStorage.setItem('dailyVerseData', JSON.stringify(dailyVerseData));
+                    }
                 }
                 
                 dailyVerseEl.innerHTML = `
                     <div class="verse-content">
-                        <p class="verse-text">${dailyVerseData.text}</p>
-                        <p class="verse-reference text-end fw-bold mt-3">— ${dailyVerseData.ref}</p>
+                        <p class="verse-text">${verse.text}</p>
+                        <p class="verse-reference text-end fw-bold mt-3">— ${verse.ref}</p>
                     </div>
                 `;
                 
-                spiritualSong.src = dailyVerseData.song.url;
-                songTitle.textContent = `Lagu Rohani: ${dailyVerseData.song.title}`;
+                // Initialize and play random song
+                if (!currentSong) initMusicPlayer();
+                if (forceNew) {
+                    // Hentikan lagu yang sedang berjalan jika ada
+                    if (isPlaying) {
+                        currentSong.pause();
+                        isPlaying = false;
+                    }
+                    currentSongIndex = dailyVerseData.songIndex;
+                    playSong(currentSongIndex);
+                } else if (!isPlaying) {
+                    currentSongIndex = dailyVerseData.songIndex;
+                    playSong(currentSongIndex);
+                }
                 
                 loadingEl.classList.add('d-none');
                 dailyVerseEl.classList.remove('d-none');
                 audioPlayer.classList.remove('d-none');
                 dailyVerseEl.classList.add('animate__fadeIn');
                 audioPlayer.classList.add('animate__fadeIn');
-
-                spiritualSong.oncanplay = () => {
-                    spiritualSong.play().catch(error => {
-                        console.error('Error playing audio:', error);
-                        showNotification('Gagal memutar lagu rohani. Klik untuk memutar manual.');
-                        spiritualSong.controls = true;
-                    });
-                };
-                spiritualSong.onerror = () => {
-                    showNotification('File lagu tidak ditemukan atau rusak. Pastikan file ada di folder "song".');
-                    audioPlayer.classList.add('d-none');
-                };
                 
-                verseHistory.unshift({ type: 'daily', text: dailyVerseData.text, ref: dailyVerseData.ref });
+                verseHistory.unshift({ type: 'daily', text: verse.text, ref: verse.ref });
                 if (verseHistory.length > 20) verseHistory.pop();
                 localStorage.setItem('verseHistory', JSON.stringify(verseHistory));
                 updateHistory();
                 
-                if (userName) showDeviceNotification('Ayat Harian Baru', `${dailyVerseData.text} (${dailyVerseData.ref})`);
+                if (userName && forceNew) showDeviceNotification('Ayat Harian Baru', `${verse.text} (${verse.ref})`);
                 
             } catch (error) {
                 console.error('Error loading daily verse:', error);
@@ -863,6 +1076,7 @@
         });
 
         window.onload = async () => {
+            initMusicPlayer();
             await loadDailyVerse();
             updateHistory();
             if (userName) {
