@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&family=Dancing+Script:wght@400&family=Cinzel:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&family=Dancing+Script:wght@400&family=Cinzel:wght@400&family=Lora:wght@400&family=Roboto:wght@400&family=Poppins:wght@400&family=Montserrat:wght@400&family=Playfair+Display:wght@400&family=Raleway:wght@400&family=Source+Sans+Pro:wght@400&family=Nunito:wght@400&family=Quicksand:wght@400&family=Ubuntu:wght@400&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="favicon/favicon.png" sizes="32x32">
     <link rel="apple-touch-icon" href="favicon/favicon.png">
     <style>
@@ -49,41 +49,22 @@
             z-index: 1000;
             transition: transform 0.3s ease;
         }
-        .sidebar:hover { transform: translateX(5px); }
         .nav-link {
             color: var(--light-color) !important;
             font-size: 18px;
             padding: 15px 20px;
-            transition: all 0.3s;
             border-radius: 10px;
             margin: 5px 10px;
             position: relative;
-            overflow: hidden;
         }
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
-        }
-        .nav-link:hover::before { left: 100%; }
         .nav-link:hover, .nav-link.active {
             background: var(--secondary-color);
             color: var(--dark-color) !important;
-            transform: translateX(10px);
-            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
         }
-        .nav-link i { transition: transform 0.3s; }
-        .nav-link:hover i { transform: scale(1.2); }
         .card {
             border: none;
             border-radius: 20px;
             background: rgba(255, 255, 255, 0.98);
-            transition: all 0.4s ease;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             position: relative;
@@ -96,10 +77,6 @@
             width: 100%;
             height: 5px;
             background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
-        }
-        .card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
         .card-title {
             color: var(--dark-color);
@@ -124,40 +101,16 @@
             padding: 12px 25px;
             font-weight: 600;
             letter-spacing: 0.5px;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
         }
         .btn-primary:hover {
             background-color: var(--dark-color);
             border-color: var(--dark-color);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        .btn-primary::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.5);
-            opacity: 0;
-            border-radius: 100%;
-            transform: scale(1, 1) translate(-50%);
-            transform-origin: 50% 50%;
-        }
-        .btn-primary:focus:not(:active)::after { animation: ripple 1s ease-out; }
-        @keyframes ripple {
-            0% { transform: scale(0, 0); opacity: 0.5; }
-            100% { transform: scale(20, 20); opacity: 0; }
         }
         .form-control {
             border-radius: 10px;
             padding: 15px;
             border: 2px solid #ddd;
             transition: all 0.3s;
-            z-index: 1;
         }
         .form-control:focus {
             border-color: var(--secondary-color);
@@ -170,25 +123,20 @@
             background: #f8f9fa;
             font-size: 18px;
             line-height: 1.8;
-            transition: all 0.3s;
-            position: relative;
-            z-index: 1;
+            padding: 20px;
         }
-        #verseResult:hover, #dailyVerse:hover, #searchResult:hover, #prayerText:hover, #aiResponse:hover {
-            transform: scale(1.01);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        .verse-content, .explanation-text {
+            margin-bottom: 15px;
         }
+        .verse-text { font-size: 20px; margin-bottom: 10px; }
+        .verse-reference { font-size: 16px; color: #555; }
+        .explanation-text { font-style: normal; text-align: justify; }
         .list-group-item {
             background: #f8f9fa;
             border: none;
             border-bottom: 1px solid #e9ecef;
             font-size: 16px;
             padding: 15px;
-            transition: all 0.3s;
-        }
-        .list-group-item:hover {
-            background: var(--light-color);
-            transform: translateX(10px);
         }
         .section { display: none; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn {
@@ -219,7 +167,7 @@
             font-size: 18px;
         }
         .mobile-navbar {
-            border-radius: 20px 20px 0 0;
+            border-radius: 10px 10px 0 0;
             padding: 10px 0;
             background: rgba(52, 58, 64, 0.95);
             backdrop-filter: blur(10px);
@@ -231,7 +179,6 @@
             font-size: 14px;
             padding: 10px;
             text-align: center;
-            transition: all 0.3s;
         }
         .mobile-navbar .nav-link i {
             display: block;
@@ -241,17 +188,6 @@
         .mobile-navbar .nav-link:hover, .mobile-navbar .nav-link.active {
             background: var(--secondary-color);
             color: var(--dark-color) !important;
-        }
-        @media (max-width: 767px) {
-            .sidebar { transform: translateX(-100%); width: 80%; }
-            .sidebar.show { transform: translateX(0); }
-            .mobile-navbar { display: flex !important; }
-            .card { margin-bottom: 20px; }
-            .input-group { flex-direction: row; flex-wrap: nowrap; align-items: stretch; }
-            .input-group .form-control { flex: 1; margin-right: 10px; height: auto; }
-            .btn-primary, .input-group-text { width: auto; margin-bottom: 0; white-space: nowrap; }
-            header h1 { font-size: 24px; }
-            main { padding-bottom: 100px; }
         }
         .fab {
             position: fixed;
@@ -269,10 +205,6 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             cursor: pointer;
             z-index: 999;
-            transition: all 0.3s;
-        }
-        @media (max-width: 767px) {
-            .fab { display: none !important; }
         }
         .spinner {
             width: 40px;
@@ -284,18 +216,11 @@
             margin: 20px auto;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        /* Enhanced Music Player Styles */
         .music-player {
-            background: rgba(255, 255, 255, 0.95);
+            background-image: url('https://media.istockphoto.com/id/1470053072/pt/foto/jesus-christ-preaches-the-sermon-on-the-mount-and-the-twelve-apostles-3d-render.jpg?b=1&s=612x612&w=0&k=20&c=6ZoNNBI4VntUS92RYOrGrUpF2ah4B6tdHVRkHSQ31DI=');
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
             margin-top: 20px;
-        }
-        .music-player:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
         .progress {
             cursor: pointer;
@@ -305,39 +230,20 @@
             height: 5px;
         }
         .progress-bar {
-            transition: width 0.1s linear;
             background-color: var(--secondary-color);
         }
-        .volume-control {
-            display: flex;
-            align-items: center;
-        }
-        #likeBtn {
-            transition: all 0.3s;
-        }
+        .volume-control { display: flex; align-items: center; }
         #playBtn {
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s;
             width: 50px;
             height: 50px;
             border-radius: 50%;
         }
-        #playBtn:hover {
-            transform: scale(1.1);
-        }
-        .song-info {
-            text-align: left;
-        }
-        .song-info h5 {
-            margin-bottom: 0;
-            font-weight: 600;
-        }
-        .song-info small {
-            color: #6c757d;
-            font-size: 0.85rem;
-        }
+        .song-info { text-align: left; }
+        .song-info h5 { margin-bottom: 0; font-weight: 600; }
+        .song-info small { color: #6c757d; font-size: 0.85rem; }
         .player-controls {
             display: flex;
             justify-content: center;
@@ -351,22 +257,6 @@
             color: #6c757d;
             margin-bottom: 10px;
         }
-        /* Premium Explanation Styles */
-        .explanation-text {
-            text-align: justify;
-            text-align-last: center;
-            font-size: 16px;
-            line-height: 1.6;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
-        }
-        .explanation-text strong {
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-        /* Settings Toggle Button */
         .settings-btn {
             position: absolute;
             top: 20px;
@@ -381,11 +271,40 @@
             justify-content: center;
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s;
             z-index: 10;
+            pointer-events: auto;
         }
-        .settings-btn:hover { transform: scale(1.1); }
-        /* Settings Panel */
+        .prayer-btn {
+            position: absolute;
+            top: 20px;
+            right: 70px;
+            background: var(--accent-color);
+            color: var(--light-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            pointer-events: auto;
+        }
+        .prayer-label {
+            position: absolute;
+            top: 25px;
+            right: 115px;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 2px 8px;
+            border-radius: 5px;
+            z-index: 9;
+            display: none; /* Mulai dengan disembunyikan */
+        }
+        .prayer-btn:hover + .prayer-label { display: block; } /* Muncul saat hover */
         .settings-panel {
             display: none;
             position: absolute;
@@ -398,15 +317,86 @@
             padding: 15px;
             z-index: 1000;
         }
-        .settings-panel.show { display: block; }
+        .prayer-panel {
+            display: none;
+            position: absolute;
+            top: 70px;
+            right: 70px;
+            width: 300px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            z-index: 1000;
+        }
+        .settings-panel.show, .prayer-panel.show { display: block; }
+        .prayer-pin-input { width: 100%; font-size: 16px; text-align: center; }
+        .prayer-list { max-height: 200px; overflow-y: auto; }
+        .prayer-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .prayer-item-text { flex: 1; margin-right: 10px; }
+        .prayer-item small { color: #777; font-size: 12px; }
+        .prayer-item-title { font-size: 16px; font-weight: 600; color: #333; }
+        .prayer-item-content { font-size: 14px; color: #555; }
+        .prayer-item-actions { display: flex; gap: 5px; }
+        .prayer-item-actions button {
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 5px;
+        }
+
+        /* Responsivitas untuk Mobile */
+        @media (max-width: 767px) {
+            .sidebar { transform: translateX(-100%); width: 80%; }
+            .sidebar.show { transform: translateX(0); }
+            .mobile-navbar { display: flex !important; }
+            .card { margin-bottom: 20px; }
+            .input-group { flex-direction: row; flex-wrap: nowrap; align-items: stretch; }
+            .input-group .form-control { flex: 1; margin-right: 10px; height: auto; }
+            .btn-primary, .input-group-text { width: auto; margin-bottom: 0; white-space: nowrap; }
+            header h1 { font-size: 24px; }
+            main { padding-bottom: 100px; }
+            .fab { display: none !important; }
+            .settings-btn { right: 10px; top: 10px; }
+            .prayer-btn { right: 60px; top: 10px; }
+            .prayer-label { right: 105px; top: 15px; font-size: 12px; }
+            .settings-panel {
+                top: 60px;
+                right: 10px;
+                width: 90%;
+                max-width: 250px;
+            }
+            .prayer-panel {
+                top: 60px;
+                right: 10px;
+                width: 90%;
+                max-width: 300px;
+                padding: 10px;
+            }
+            .prayer-pin-input { font-size: 14px; padding: 10px; }
+            .prayer-list { max-height: 150px; }
+            .prayer-item { flex-direction: column; align-items: flex-start; }
+            .prayer-item-text { margin-bottom: 5px; }
+            .prayer-item-actions { width: 100%; justify-content: flex-end; }
+            .prayer-panel .btn { font-size: 14px; padding: 8px; }
+            .prayer-panel textarea { font-size: 14px; }
+        }
     </style>
 </head>
 <body>
     <div class="container-fluid">
         <header class="text-center py-4">
             <h1 class="display-4 fw-bold text-white">
-                <i class="fas fa-bible me-2 animate__animated animate__pulse animate__infinite" style="animation-duration: 3s;"></i> 
-                <span class="bible-text">Aplikasi Alkitab Sempurna</span>
+                <i class="fas fa-bible me-2"></i> 
+                <span class="bible-text">APLIKASI ALKITAB SPECIAL</span>
             </h1>
         </header>
         
@@ -416,17 +406,16 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="#" data-section="home">
                             <i class="fas fa-bible me-2"></i> <span>Home</span>
-                            <span class="animate__animated animate__fadeInRight animate__delay-1s" style="position: absolute; right: 20px;">▶</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-section="special">
-                            <i class="fas fa-star me-2"></i> <span>Ayat Spesial</span>
+                            <i class="fas fa-feather me-2"></i> <span>Ayat Spesial</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-section="daily">
-                            <i class="fas fa-calendar-day me-2"></i> <span>Ayat Harian</span>
+                            <i class="fas fa-calendar-check me-2"></i> <span>Ayat Harian</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -444,11 +433,13 @@
                 <div id="home" class="section active">
                     <div class="card shadow-lg mt-4 animate__animated animate__fadeIn">
                         <div class="card-body">
-                            <!-- Settings Toggle Button -->
                             <div class="settings-btn" id="settingsBtn">
                                 <i class="fas fa-cog"></i>
                             </div>
-                            <!-- Settings Panel -->
+                            <div class="prayer-btn" id="prayerBtn">
+                                <i class="fas fa-pray"></i>
+                            </div>
+                            <div class="prayer-label" id="prayerLabel">Doa Privasi</div>
                             <div id="settingsPanel" class="settings-panel">
                                 <h5>Pengaturan</h5>
                                 <label for="themeSelect">Tema:</label>
@@ -462,9 +453,55 @@
                                 <label for="fontSelect">Font:</label>
                                 <select id="fontSelect" class="form-control mb-2" onchange="applyFont()">
                                     <option value="merriweather">Merriweather (Default)</option>
-                                    <option value="dancing-script">Dancing Script (Elegan)</option>
-                                    <option value="cinzel">Cinzel (Premium)</option>
+                                    <option value="dancing-script">Dancing Script</option>
+                                    <option value="cinzel">Cinzel</option>
+                                    <option value="lora">Lora</option>
+                                    <option value="roboto">Roboto</option>
+                                    <option value="poppins">Poppins</option>
+                                    <option value="montserrat">Montserrat</option>
+                                    <option value="playfair-display">Playfair Display</option>
+                                    <option value="raleway">Raleway</option>
+                                    <option value="source-sans-pro">Source Sans Pro</option>
+                                    <option value="nunito">Nunito</option>
+                                    <option value="quicksand">Quicksand</option>
+                                    <option value="ubuntu">Ubuntu</option>
                                 </select>
+                                <label for="fontSize">Ukuran Font:</label>
+                                <input type="range" id="fontSize" class="form-control mb-2" min="12" max="30" value="18" onchange="applyFontSize()">
+                            </div>
+                            <div id="prayerPanel" class="prayer-panel">
+                                <h5>Tempat Doa Rahasia</h5>
+                                <div id="prayerPinSection">
+                                    <input type="text" id="prayerPinInput" class="form-control prayer-pin-input mb-2" maxlength="6" placeholder="Masukkan PIN (6 angka)" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                    <button id="enterPinBtn" class="btn btn-primary w-100 mb-2" onclick="verifyPrayerPin()">Masuk</button>
+                                    <button id="setPinBtn" class="btn btn-secondary w-100" onclick="showSetPin()">Buat atau Ganti PIN</button>
+                                </div>
+                                <div id="prayerContent" style="display: none;">
+                                    <input type="text" id="prayerTitleInput" class="form-control mb-2" placeholder="Judul Doa">
+                                    <textarea id="prayerTextArea" class="form-control mb-2" rows="3" placeholder="Isi Doa Anda..."></textarea>
+                                    <button class="btn btn-success w-100 mb-2" onclick="savePrayer()">Simpan Doa</button>
+                                    <div id="prayerList" class="prayer-list"></div>
+                                    <div class="d-flex justify-content-between">
+                                        <button class="btn btn-warning" onclick="showChangePin()" title="Ganti PIN">
+                                            <i class="fas fa-key"></i>
+                                        </button>
+                                        <button class="btn btn-danger" onclick="logoutPrayer()" title="Keluar">
+                                            <i class="fas fa-sign-out-alt"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="newPinSection" style="display: none;">
+                                    <input type="text" id="oldPinInputNew" class="form-control prayer-pin-input mb-2" maxlength="6" placeholder="Masukkan PIN Lama (jika ada)" oninput="this.value = this.value.replace(/[^0-9]/g, '')" style="display: ${prayerPin ? 'block' : 'none'};">
+                                    <input type="text" id="newPinInput" class="form-control prayer-pin-input mb-2" maxlength="6" placeholder="Masukkan PIN Baru (6 angka)" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                    <button class="btn btn-primary w-100 mb-2" onclick="setPrayerPin()">Simpan PIN</button>
+                                    <button class="btn btn-secondary w-100" onclick="cancelSetPin()">Batal</button>
+                                </div>
+                                <div id="changePinSection" style="display: none;">
+                                    <input type="text" id="oldPinInput" class="form-control prayer-pin-input mb-2" maxlength="6" placeholder="Masukkan PIN Lama" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                    <input type="text" id="newPinInputChange" class="form-control prayer-pin-input mb-2" maxlength="6" placeholder="Masukkan PIN Baru" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                    <button class="btn btn-primary w-100 mb-2" onclick="changePrayerPin()">Simpan PIN Baru</button>
+                                    <button class="btn btn-secondary w-100" onclick="cancelChangePin()">Batal</button>
+                                </div>
                             </div>
 
                             <h2 class="card-title fw-semibold mb-4">
@@ -478,7 +515,6 @@
                             </div>
                             <div id="searchResult" class="p-4 bg-light rounded bible-text animate__animated"></div>
 
-                            <!-- AI Assistant -->
                             <h2 class="card-title fw-semibold mb-4 mt-5">
                                 <i class="fas fa-robot me-2"></i>AI Assistant Rohani
                             </h2>
@@ -488,7 +524,6 @@
                             </div>
                             <div id="aiResponse" class="p-4 bg-light rounded bible-text"></div>
 
-                            <!-- Doa Harian -->
                             <h2 class="card-title fw-semibold mb-4 mt-5">
                                 <i class="fas fa-pray me-2"></i>Doa Harian
                             </h2>
@@ -606,10 +641,10 @@
                     <i class="fas fa-bible"></i> <span>Home</span>
                 </a>
                 <a class="nav-link text-white" href="#" data-section="special">
-                    <i class="fas fa-star"></i> <span>Spesial</span>
+                    <i class="fas fa-feather"></i> <span>Spesial</span>
                 </a>
                 <a class="nav-link text-white" href="#" data-section="daily">
-                    <i class="fas fa-calendar-day"></i> <span>Harian</span>
+                    <i class="fas fa-calendar-check"></i> <span>Harian</span>
                 </a>
                 <a class="nav-link text-white" href="#" data-section="history">
                     <i class="fas fa-history"></i> <span>Riwayat</span>
@@ -627,7 +662,7 @@
     <script>
         const API_KEY = '61eaf8e1505573b47a2942cbfdfbf9cc';
         const BASE_URL = 'https://api.scripture.api.bible/v1';
-        const BIBLE_ID = 'de4e12af7f28f599-01'; // Terjemahan Baru (TB) - Bahasa Indonesia
+        const BIBLE_ID = 'de4e12af7f28f599-01';
         const GEMINI_API_KEY = 'AIzaSyBvxIy4Ki43eOOHBg5QRp5gSPMBQdNx9lQ';
         const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
@@ -637,6 +672,9 @@
         let currentSongIndex = 0;
         let isPlaying = false;
         let currentSong = null;
+        let prayerPin = localStorage.getItem('prayerPin') || null;
+        let prayers = JSON.parse(localStorage.getItem('prayers')) || [];
+        let isPrayerUnlocked = false;
 
         const bookCodes = {
             'Kejadian': 'GEN', 'Keluaran': 'EXO', 'Imamat': 'LEV', 'Bilangan': 'NUM', 
@@ -661,66 +699,16 @@
         const books = Object.keys(bookCodes);
 
         const spiritualSongs = [
-            { 
-                title: 'Penolong Yang Setia', 
-                artist: 'Melitha Sidabutar', 
-                cover: 'image/penolongsetia.png',
-                url: 'song/lagu1.mp3' 
-            },
-            { 
-                title: 'Indah Pada Waktunya', 
-                artist: 'Putri Siagian', 
-                cover: 'image/indahpadawaktunya.png',
-                url: 'song/lagu2.mp3' 
-            },
-            { 
-                title: 'Yesus Penolongku', 
-                artist: 'Bless Trio', 
-                cover: 'image/yesuspenolongku.png',
-                url: 'song/Bless Trio - Yesus Penolongku (Lagu Rohani Manado).mp3' 
-            },
-            { 
-                title: 'KEPADAMU AKU BERDOA', 
-                artist: 'Ellen Mamo', 
-                cover: 'image/kepadamuakuberdoa.png',
-                url: 'song/KEPADAMU AKU BERDOA - Ellen Mamo ｜｜ Cipt.Sosipather Francescho.mp3' 
-            },
-            { 
-                title: 'Pakai Aku Tuhan', 
-                artist: 'MITHA TALAHATU', 
-                cover: 'image/pakaiakutuhan.png',
-                url: 'song/MITHA TALAHATU - Pakai Aku Tuhan (Official Video).mp3' 
-            },
-            { 
-                title: 'Yesus Kepadamu Ku Berseru', 
-                artist: 'Sympohny Worship', 
-                cover: 'image/yesus.png',
-                url: 'song/Yesus pada-Mu Kuberseru - OFFICIAL MUSIC VIDEO.mp3' 
-            },
-            { 
-                title: 'Pada Satu Bukit', 
-                artist: 'Alyce Ambesa', 
-                cover: 'image/padasatu.png',
-                url: 'song/PADA SATU BUKIT - ALYCE AMBESA.mp3' 
-            },
-            { 
-                title: 'Sentuh Hatiku', 
-                artist: 'Maria Shandi', 
-                cover: 'image/sentuh.png',
-                url: 'song/Sentuh Hatiku - Maria Shandi [Official Music Video] - Lagu Rohani.mp3' 
-            },
-            { 
-                title: 'Walau Ku Tak Dapat Melihat', 
-                artist: 'Grezia Epiphania', 
-                cover: 'image/walau.png',
-                url: 'song/Walau Ku Tak Dapat Melihat - Grezia Epiphania [Official Music Video].mp3' 
-            },
-            { 
-                title: 'Sampaikan Pada Yesus', 
-                artist: 'Melita Sidabutar', 
-                cover: 'image/sampai.png',
-                url: 'song/Sampaikan Pada Yesus - Melitha Sidabutar [Official Music Video] - Lagu Rohani.mp3' 
-            },
+            { title: 'Penolong Yang Setia', artist: 'Melitha Sidabutar', cover: 'image/penolongsetia.png', url: 'song/lagu1.mp3' },
+            { title: 'Indah Pada Waktunya', artist: 'Putri Siagian', cover: 'image/indahpadawaktunya.png', url: 'song/lagu2.mp3' },
+            { title: 'Yesus Penolongku', artist: 'Bless Trio', cover: 'image/yesuspenolongku.png', url: 'song/Bless Trio - Yesus Penolongku (Lagu Rohani Manado).mp3' },
+            { title: 'KEPADAMU AKU BERDOA', artist: 'Ellen Mamo', cover: 'image/kepadamuakuberdoa.png', url: 'song/KEPADAMU AKU BERDOA - Ellen Mamo ｜｜ Cipt.Sosipather Francescho.mp3' },
+            { title: 'Pakai Aku Tuhan', artist: 'MITHA TALAHATU', cover: 'image/pakaiakutuhan.png', url: 'song/MITHA TALAHATU - Pakai Aku Tuhan (Official Video).mp3' },
+            { title: 'Yesus Kepadamu Ku Berseru', artist: 'Sympohny Worship', cover: 'image/yesus.png', url: 'song/Yesus pada-Mu Kuberseru - OFFICIAL MUSIC VIDEO.mp3' },
+            { title: 'Pada Satu Bukit', artist: 'Alyce Ambesa', cover: 'image/padasatu.png', url: 'song/PADA SATU BUKIT - ALYCE AMBESA.mp3' },
+            { title: 'Sentuh Hatiku', artist: 'Maria Shandi', cover: 'image/sentuh.png', url: 'song/Sentuh Hatiku - Maria Shandi [Official Music Video] - Lagu Rohani.mp3' },
+            { title: 'Walau Ku Tak Dapat Melihat', artist: 'Grezia Epiphania', cover: 'image/walau.png', url: 'song/Walau Ku Tak Dapat Melihat - Grezia Epiphania [Official Music Video].mp3' },
+            { title: 'Sampaikan Pada Yesus', artist: 'Melita Sidabutar', cover: 'image/sampai.png', url: 'song/Sampaikan Pada Yesus - Melitha Sidabutar [Official Music Video] - Lagu Rohani.mp3' }
         ];
 
         function initMusicPlayer() {
@@ -778,34 +766,20 @@
             }
         }
 
-        function playNext() {
-            playSong(currentSongIndex + 1);
-        }
-
-        function playPrevious() {
-            playSong(currentSongIndex - 1);
-        }
-
+        function playNext() { playSong(currentSongIndex + 1); }
+        function playPrevious() { playSong(currentSongIndex - 1); }
         function updateProgress() {
             const progressPercent = (currentSong.currentTime / currentSong.duration) * 100;
             document.getElementById('progressBar').style.width = `${progressPercent}%`;
             document.getElementById('currentTime').textContent = formatTime(currentSong.currentTime);
         }
-
-        function updateDuration() {
-            document.getElementById('duration').textContent = formatTime(currentSong.duration);
-        }
-
+        function updateDuration() { document.getElementById('duration').textContent = formatTime(currentSong.duration); }
         function formatTime(seconds) {
             const minutes = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
         }
-
-        function setVolume() {
-            currentSong.volume = this.value;
-        }
-
+        function setVolume() { currentSong.volume = this.value; }
         function toggleLike() {
             this.classList.toggle('btn-danger');
             this.classList.toggle('btn-outline-danger');
@@ -822,9 +796,7 @@
             if (duration > 0) setTimeout(() => notification.classList.remove('show'), duration);
         }
 
-        function hideNotification() {
-            document.getElementById('notification').classList.remove('show');
-        }
+        function hideNotification() { document.getElementById('notification').classList.remove('show'); }
 
         function showDeviceNotification(title, body) {
             if ('Notification' in window && Notification.permission === 'granted') {
@@ -920,13 +892,9 @@
             try {
                 const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: prompt }]
-                        }]
+                        contents: [{ parts: [{ text: prompt }] }]
                     })
                 });
 
@@ -1076,10 +1044,10 @@
                     <div class="verse-content">
                         <p class="verse-text">${verse.text}</p>
                         <p class="verse-reference text-end fw-bold mt-3">— ${verse.ref}</p>
-                        <hr>
-                        <h5 class="mt-3 text-primary">Penjelasan dan Motivasi:</h5>
-                        <p class="explanation-text">${explanation}</p>
                     </div>
+                    <hr>
+                    <h5 class="mt-3 text-primary">Penjelasan dan Motivasi:</h5>
+                    <p class="explanation-text">${explanation}</p>
                 `;
                 
                 if (!currentSong) initMusicPlayer();
@@ -1108,7 +1076,6 @@
                 
                 if (userName && forceNew) showDeviceNotification('Ayat Harian Baru', `${verse.text} (${verse.ref})`);
                 
-                // Load initial prayer based on daily verse
                 if (!document.getElementById('prayerText').innerText) generatePrayer();
                 
             } catch (error) {
@@ -1147,10 +1114,10 @@
                     <div class="verse-content">
                         <p class="verse-text">${verse.text}</p>
                         <p class="verse-reference text-end fw-bold mt-3">— ${verse.ref}</p>
-                        <hr>
-                        <h5 class="mt-3 text-primary">Penjelasan untuk ${name}:</h5>
-                        <p class="explanation-text">${explanation}</p>
                     </div>
+                    <hr>
+                    <h5 class="mt-3 text-primary">Penjelasan untuk ${name}:</h5>
+                    <p class="explanation-text">${explanation}</p>
                 `;
                 
                 verseHistory.unshift({ type: 'special', name: name, text: verse.text, ref: verse.ref, explanation: explanation });
@@ -1180,7 +1147,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>${content}</div>
                                 <button class="btn btn-sm btn-outline-primary" onclick="shareVerse('${item.text}', '${item.ref}')">
-                                    <i class="fas fa-share-alt"></i>
+                                    <i class="fas fa-clipboard"></i>
                                 </button>
                             </div>
                         </li>
@@ -1226,12 +1193,6 @@
             showNotification('Riwayat telah dihapus', 3000);
         }
 
-        // Settings Functions
-        document.getElementById('settingsBtn').addEventListener('click', function() {
-            const panel = document.getElementById('settingsPanel');
-            panel.classList.toggle('show');
-        });
-
         function applyTheme() {
             const theme = document.getElementById('themeSelect').value;
             if (theme === 'dark') {
@@ -1255,11 +1216,26 @@
             let fontFamily = 'Merriweather';
             if (font === 'dancing-script') fontFamily = 'Dancing Script';
             else if (font === 'cinzel') fontFamily = 'Cinzel';
+            else if (font === 'lora') fontFamily = 'Lora';
+            else if (font === 'roboto') fontFamily = 'Roboto';
+            else if (font === 'poppins') fontFamily = 'Poppins';
+            else if (font === 'montserrat') fontFamily = 'Montserrat';
+            else if (font === 'playfair-display') fontFamily = 'Playfair Display';
+            else if (font === 'raleway') fontFamily = 'Raleway';
+            else if (font === 'source-sans-pro') fontFamily = 'Source Sans Pro';
+            else if (font === 'nunito') fontFamily = 'Nunito';
+            else if (font === 'quicksand') fontFamily = 'Quicksand';
+            else if (font === 'ubuntu') fontFamily = 'Ubuntu';
             document.querySelectorAll('.bible-text').forEach(el => el.style.fontFamily = `'${fontFamily}', serif`);
             localStorage.setItem('font', font);
         }
 
-        // AI Assistant Function (Limited to Spiritual/Alkitab Questions)
+        function applyFontSize() {
+            const size = document.getElementById('fontSize').value;
+            document.querySelectorAll('.bible-text').forEach(el => el.style.fontSize = `${size}px`);
+            localStorage.setItem('fontSize', size);
+        }
+
         async function askAI() {
             const question = document.getElementById('aiQuestion').value.trim();
             const aiResponse = document.getElementById('aiResponse');
@@ -1281,19 +1257,16 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        contents: [{
-                            parts: [{ text: `Jawab dalam bahasa Indonesia hanya jika pertanyaan terkait Alkitab atau kehidupan rohani: ${question}` }]
-                        }]
+                        contents: [{ parts: [{ text: `Jawab dalam bahasa Indonesia hanya jika pertanyaan terkait Alkitab atau kehidupan rohani: ${question}` }] }]
                     })
                 });
                 const data = await response.json();
-                aiResponse.textContent = data.candidates[0].content.parts[0].text;
+                aiResponse.innerHTML = `<p class="explanation-text">${data.candidates[0].content.parts[0].text}</p>`;
             } catch (error) {
                 aiResponse.textContent = 'Gagal mendapatkan jawaban. Coba lagi nanti.';
             }
         }
 
-        // Prayer Function
         async function generatePrayer() {
             const prayerText = document.getElementById('prayerText');
             prayerText.innerHTML = '<div class="spinner"></div><p>Membuat doa...</p>';
@@ -1306,15 +1279,180 @@
             }
         }
 
+        // Prayer Functions
+        function togglePrayerPanel() {
+            const panel = document.getElementById('prayerPanel');
+            panel.classList.toggle('show');
+            if (!prayerPin && !isPrayerUnlocked) {
+                showSetPin();
+            } else if (isPrayerUnlocked) {
+                loadPrayers();
+            }
+        }
+
+        function verifyPrayerPin() {
+            const pinInput = document.getElementById('prayerPinInput').value;
+            if (pinInput.length !== 6 || !/^\d+$/.test(pinInput)) {
+                showNotification('PIN harus 6 angka!', 3000);
+                return;
+            }
+            if (prayerPin && pinInput === prayerPin) {
+                isPrayerUnlocked = true;
+                document.getElementById('prayerPinSection').style.display = 'none';
+                document.getElementById('prayerContent').style.display = 'block';
+                loadPrayers();
+            } else if (prayerPin) {
+                showNotification('PIN salah!', 3000);
+            }
+        }
+
+        function showSetPin() {
+            document.getElementById('prayerPinSection').style.display = 'none';
+            document.getElementById('newPinSection').style.display = 'block';
+            document.getElementById('oldPinInputNew').value = '';
+            document.getElementById('newPinInput').value = '';
+        }
+
+        function setPrayerPin() {
+            const oldPinInput = document.getElementById('oldPinInputNew').value;
+            const newPinInput = document.getElementById('newPinInput').value;
+            if (newPinInput.length !== 6 || !/^\d+$/.test(newPinInput)) {
+                showNotification('PIN baru harus 6 angka!', 3000);
+                return;
+            }
+            if (prayerPin && oldPinInput !== prayerPin) {
+                showNotification('PIN lama salah!', 3000);
+                return;
+            }
+            prayerPin = newPinInput;
+            localStorage.setItem('prayerPin', prayerPin);
+            isPrayerUnlocked = true;
+            document.getElementById('newPinSection').style.display = 'none';
+            document.getElementById('prayerContent').style.display = 'block';
+            showNotification('PIN berhasil disimpan!', 3000);
+            loadPrayers();
+        }
+
+        function cancelSetPin() {
+            document.getElementById('newPinSection').style.display = 'none';
+            document.getElementById('prayerPinSection').style.display = 'block';
+            document.getElementById('prayerPinInput').value = '';
+        }
+
+        function showChangePin() {
+            document.getElementById('prayerContent').style.display = 'none';
+            document.getElementById('changePinSection').style.display = 'block';
+            document.getElementById('oldPinInput').value = '';
+            document.getElementById('newPinInputChange').value = '';
+        }
+
+        function cancelChangePin() {
+            document.getElementById('changePinSection').style.display = 'none';
+            document.getElementById('prayerContent').style.display = 'block';
+            loadPrayers();
+        }
+
+        function changePrayerPin() {
+            const oldPin = document.getElementById('oldPinInput').value;
+            const newPin = document.getElementById('newPinInputChange').value;
+            if (oldPin !== prayerPin) {
+                showNotification('PIN lama salah!', 3000);
+                return;
+            }
+            if (newPin.length !== 6 || !/^\d+$/.test(newPin)) {
+                showNotification('PIN baru harus 6 angka!', 3000);
+                return;
+            }
+            prayerPin = newPin;
+            localStorage.setItem('prayerPin', prayerPin);
+            document.getElementById('changePinSection').style.display = 'none';
+            document.getElementById('prayerContent').style.display = 'block';
+            showNotification('PIN berhasil diganti!', 3000);
+            loadPrayers();
+        }
+
+        function savePrayer() {
+            const prayerTitle = document.getElementById('prayerTitleInput').value.trim();
+            const prayerText = document.getElementById('prayerTextArea').value.trim();
+            if (!prayerTitle || !prayerText) {
+                showNotification('Judul dan isi doa tidak boleh kosong!', 3000);
+                return;
+            }
+            prayers.unshift({ title: prayerTitle, text: prayerText, date: new Date().toLocaleString() });
+            localStorage.setItem('prayers', JSON.stringify(prayers));
+            document.getElementById('prayerTitleInput').value = '';
+            document.getElementById('prayerTextArea').value = '';
+            loadPrayers();
+            showNotification('Doa berhasil disimpan!', 3000);
+        }
+
+        function loadPrayers() {
+            const prayerList = document.getElementById('prayerList');
+            prayerList.innerHTML = prayers.map((prayer, index) => `
+                <div class="prayer-item" data-index="${index}">
+                    <div class="prayer-item-text">
+                        <small>${prayer.date}</small><br>
+                        <span class="prayer-item-title">${prayer.title}</span><br>
+                        <span class="prayer-item-content">${prayer.text}</span>
+                    </div>
+                    <div class="prayer-item-actions">
+                        <button class="btn btn-sm btn-outline-primary" onclick="editPrayer(${index})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deletePrayer(${index})">
+                            <i class="fas fa-trash"></i> Hapus
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editPrayer(index) {
+            const prayer = prayers[index];
+            const newTitle = prompt('Edit judul doa:', prayer.title);
+            const newText = prompt('Edit isi doa:', prayer.text);
+            if (newTitle !== null && newText !== null && newTitle.trim() && newText.trim()) {
+                prayers[index].title = newTitle.trim();
+                prayers[index].text = newText.trim();
+                prayers[index].date = new Date().toLocaleString();
+                localStorage.setItem('prayers', JSON.stringify(prayers));
+                loadPrayers();
+                showNotification('Doa berhasil diedit!', 3000);
+            } else if (newTitle === null || newText === null) {
+                showNotification('Edit doa dibatalkan.', 3000);
+            } else {
+                showNotification('Judul dan isi doa tidak boleh kosong!', 3000);
+            }
+        }
+
+        function deletePrayer(index) {
+            if (confirm(`Hapus doa "${prayers[index].title}"?`)) {
+                prayers.splice(index, 1);
+                localStorage.setItem('prayers', JSON.stringify(prayers));
+                loadPrayers();
+                showNotification('Doa berhasil dihapus!', 3000);
+            }
+        }
+
+                function logoutPrayer() {
+            isPrayerUnlocked = false;
+            document.getElementById('prayerContent').style.display = 'none';
+            document.getElementById('prayerPinSection').style.display = 'block';
+            document.getElementById('prayerPinInput').value = '';
+            document.getElementById('prayerPanel').classList.remove('show');
+        }
+
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
-                document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
-                const sectionId = link.getAttribute('data-section');
-                document.getElementById(sectionId).classList.add('active');
+                const section = link.getAttribute('data-section');
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById(section).classList.add('active');
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
                 link.classList.add('active');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (window.innerWidth < 768) {
+                    document.querySelector('.sidebar').classList.remove('show');
+                }
             });
         });
 
@@ -1323,44 +1461,85 @@
         });
 
         window.onload = async () => {
-            initMusicPlayer();
-            await loadDailyVerse();
             updateHistory();
-            if (userName) {
-                showNotification(`Selamat datang kembali, ${userName}!`, 5000);
-                setInterval(async () => {
-                    const now = new Date().getTime();
-                    if (!dailyVerseData || (now - dailyVerseData.timestamp > 24 * 60 * 60 * 1000)) {
-                        await loadDailyVerse(true);
-                    }
-                }, 60 * 1000);
-            }
-            // Apply saved settings
-            if (localStorage.getItem('theme')) {
-                document.getElementById('themeSelect').value = localStorage.getItem('theme');
+            await loadDailyVerse();
+            
+            setInterval(async () => {
+                const now = new Date().getTime();
+                const oneDay = 24 * 60 * 60 * 1000;
+                if (dailyVerseData && (now - dailyVerseData.timestamp > oneDay)) {
+                    await loadDailyVerse(true);
+                }
+            }, 60000);
+
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.getElementById('themeSelect').value = savedTheme;
                 applyTheme();
             }
-            if (localStorage.getItem('customBackground')) {
-                document.getElementById('customBackground').value = localStorage.getItem('customBackground');
+
+            const savedBackground = localStorage.getItem('customBackground');
+            if (savedBackground) {
+                document.getElementById('customBackground').value = savedBackground;
                 applyCustomBackground();
             }
-            if (localStorage.getItem('font')) {
-                document.getElementById('fontSelect').value = localStorage.getItem('font');
+
+            const savedFont = localStorage.getItem('font');
+            if (savedFont) {
+                document.getElementById('fontSelect').value = savedFont;
                 applyFont();
             }
+
+            const savedFontSize = localStorage.getItem('fontSize');
+            if (savedFontSize) {
+                document.getElementById('fontSize').value = savedFontSize;
+                applyFontSize();
+            }
+
+            document.getElementById('settingsBtn').addEventListener('click', () => {
+                document.getElementById('settingsPanel').classList.toggle('show');
+            });
+
+            document.getElementById('prayerBtn').addEventListener('click', togglePrayerPanel);
+
+            document.addEventListener('click', (e) => {
+                const settingsPanel = document.getElementById('settingsPanel');
+                const settingsBtn = document.getElementById('settingsBtn');
+                const prayerPanel = document.getElementById('prayerPanel');
+                const prayerBtn = document.getElementById('prayerBtn');
+
+                if (!settingsPanel.contains(e.target) && !settingsBtn.contains(e.target)) {
+                    settingsPanel.classList.remove('show');
+                }
+                if (!prayerPanel.contains(e.target) && !prayerBtn.contains(e.target)) {
+                    prayerPanel.classList.remove('show');
+                }
+            });
+
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchBible();
+            });
+
+            document.getElementById('aiQuestion').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') askAI();
+            });
+
+            document.getElementById('nameInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') matchNameToVerse();
+            });
+
+            document.getElementById('prayerPinInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') verifyPrayerPin();
+            });
+
+            document.getElementById('prayerTitleInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') savePrayer();
+            });
+
+            document.getElementById('prayerTextArea').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && e.ctrlKey) savePrayer();
+            });
         };
-
-        document.getElementById('searchInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') searchBible();
-        });
-
-        document.getElementById('nameInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') matchNameToVerse();
-        });
-
-        document.getElementById('aiQuestion').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') askAI();
-        });
     </script>
 </body>
 </html>
