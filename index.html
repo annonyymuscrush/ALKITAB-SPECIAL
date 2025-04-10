@@ -12,62 +12,73 @@
     <link rel="apple-touch-icon" href="favicon/favicon.png">
     <style>
         :root {
-            --primary-color: #3a5a78;
-            --secondary-color: #f1c40f;
-            --accent-color: #e74c3c;
-            --dark-color: #2c3e50;
-            --light-color: #ecf0f1;
+            --primary-color: #1e3a8a;
+            --secondary-color: #fbbf24;
+            --accent-color: #dc2626;
+            --dark-color: #1f2937;
+            --light-color: #f9fafb;
+            --premium-bg: linear-gradient(135deg, #1e3a8a, #6b7280);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
         }
         body {
-            background: linear-gradient(135deg, #2c3e50, #4a69bd);
+            background: var(--premium-bg);
             font-family: 'Open Sans', sans-serif;
             color: #333;
             min-height: 100vh;
             overflow-x: hidden;
-            padding-bottom: 80px;
+            padding-bottom: 100px;
         }
         .bible-text { font-family: 'Merriweather', serif; }
         header {
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 0 0 20px 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 0 0 25px 25px;
+            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(12px);
+            padding: 20px 0;
         }
         header h1 {
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+            text-shadow: var(--text-shadow);
+            font-family: 'Playfair Display', serif;
             font-weight: 700;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            color: var(--light-color);
         }
         .sidebar {
-            background: linear-gradient(to bottom, #34495e, #2c3e50);
+            background: linear-gradient(to bottom, #1f2937, #111827);
             height: 100vh;
-            padding-top: 20px;
+            padding-top: 30px;
             position: fixed;
             top: 0;
             left: 0;
-            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.25);
             z-index: 1000;
-            transition: transform 0.3s ease;
+            transition: transform 0.4s ease;
         }
         .nav-link {
             color: var(--light-color) !important;
             font-size: 18px;
-            padding: 15px 20px;
-            border-radius: 10px;
-            margin: 5px 10px;
-            position: relative;
+            padding: 15px 25px;
+            border-radius: 12px;
+            margin: 8px 15px;
+            transition: all 0.3s ease;
         }
         .nav-link:hover, .nav-link.active {
             background: var(--secondary-color);
             color: var(--dark-color) !important;
+            transform: translateX(5px);
         }
         .card {
             border: none;
-            border-radius: 20px;
+            border-radius: 25px;
             background: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--card-shadow);
             overflow: hidden;
             position: relative;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
         }
         .card::before {
             content: '';
@@ -75,72 +86,84 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
-            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+            height: 6px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
         }
         .card-title {
             color: var(--dark-color);
-            font-size: 28px;
+            font-size: 30px;
             font-weight: 700;
+            font-family: 'Playfair Display', serif;
             position: relative;
-            padding-bottom: 10px;
+            padding-bottom: 12px;
         }
         .card-title::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 0;
-            width: 50px;
-            height: 3px;
+            width: 60px;
+            height: 4px;
             background: var(--secondary-color);
+            border-radius: 2px;
         }
         .btn-primary {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
-            border-radius: 10px;
-            padding: 12px 25px;
+            border-radius: 12px;
+            padding: 12px 30px;
             font-weight: 600;
             letter-spacing: 0.5px;
+            transition: all 0.3s ease;
         }
         .btn-primary:hover {
             background-color: var(--dark-color);
             border-color: var(--dark-color);
+            transform: scale(1.05);
         }
         .form-control {
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 15px;
-            border: 2px solid #ddd;
-            transition: all 0.3s;
+            border: 2px solid #e5e7eb;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+            font-size: 10px;
+            font-family: lobster, cursive;
         }
         .form-control:focus {
             border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.25rem rgba(241, 196, 15, 0.25);
+            box-shadow: 0 0 0 0.25rem rgba(251, 191, 36, 0.25);
         }
         #verseResult, #dailyVerse, #searchResult, #prayerText, #aiResponse {
             font-style: italic;
             color: var(--dark-color);
-            border-left: 5px solid var(--secondary-color);
-            background: #f8f9fa;
+            border-left: 6px solid var(--secondary-color);
+            background: #f8fafc;
             font-size: 18px;
             line-height: 1.8;
-            padding: 20px;
+            padding: 25px;
+            border-radius: 10px;
         }
         .verse-content, .explanation-text {
             margin-bottom: 15px;
         }
-        .verse-text { font-size: 20px; margin-bottom: 10px; }
-        .verse-reference { font-size: 16px; color: #555; }
+        .verse-text { font-size: 22px; margin-bottom: 12px; }
+        .verse-reference { font-size: 16px; color: #4b5563; }
         .explanation-text { font-style: normal; text-align: justify; }
         .list-group-item {
-            background: #f8f9fa;
+            background: #f8fafc;
             border: none;
-            border-bottom: 1px solid #e9ecef;
+            border-bottom: 1px solid #e5e7eb;
             font-size: 16px;
             padding: 15px;
+            transition: background 0.3s ease;
         }
-        .section { display: none; animation: fadeIn 0.5s ease; }
+        .list-group-item:hover {
+            background: #f1f5f9;
+        }
+        .section { display: none; animation: fadeIn 0.6s ease; }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(25px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .section.active { display: block; }
@@ -149,14 +172,14 @@
             bottom: 20px;
             right: 20px;
             background: var(--primary-color);
-            color: white;
+            color: var(--light-color);
             padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
             z-index: 9999;
             transform: translateX(150%);
             transition: transform 0.5s ease;
-            max-width: 300px;
+            max-width: 320px;
         }
         .notification.show { transform: translateX(0); }
         .notification-close {
@@ -165,46 +188,53 @@
             right: 10px;
             cursor: pointer;
             font-size: 18px;
+            color: var(--light-color);
         }
         .mobile-navbar {
-            border-radius: 10px 10px 0 0;
+            border-radius: 15px 15px 0 0;
             padding: 10px 0;
-            background: rgba(52, 58, 64, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+            background: rgba(31, 41, 55, 0.95);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.25);
             z-index: 1000;
         }
         .mobile-navbar .nav-link {
-            color: white !important;
+            color: var(--light-color) !important;
             font-size: 14px;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
+            transition: all 0.3s ease;
         }
         .mobile-navbar .nav-link i {
             display: block;
-            font-size: 20px;
+            font-size: 22px;
             margin-bottom: 5px;
         }
         .mobile-navbar .nav-link:hover, .mobile-navbar .nav-link.active {
             background: var(--secondary-color);
             color: var(--dark-color) !important;
+            border-radius: 10px;
         }
         .fab {
             position: fixed;
-            bottom: 80px;
+            bottom: 90px;
             right: 20px;
             width: 60px;
             height: 60px;
             background: var(--accent-color);
-            color: white;
+            color: var(--light-color);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            font-size: 26px;
+            box-shadow: var(--card-shadow);
             cursor: pointer;
             z-index: 999;
+            transition: transform 0.3s ease;
+        }
+        .fab:hover {
+            transform: scale(1.1);
         }
         .spinner {
             width: 40px;
@@ -218,19 +248,22 @@
         @keyframes spin { to { transform: rotate(360deg); } }
         .music-player {
             background-image: url('https://media.istockphoto.com/id/1470053072/pt/foto/jesus-christ-preaches-the-sermon-on-the-mount-and-the-twelve-apostles-3d-render.jpg?b=1&s=612x612&w=0&k=20&c=6ZoNNBI4VntUS92RYOrGrUpF2ah4B6tdHVRkHSQ31DI=');
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
+            background-size: cover;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            margin-top: 25px;
+            padding: 15px;
         }
         .progress {
             cursor: pointer;
-            background-color: #e9ecef;
+            background-color: #e5e7eb;
             border-radius: 10px;
             overflow: hidden;
-            height: 5px;
+            height: 6px;
         }
         .progress-bar {
             background-color: var(--secondary-color);
+            transition: width 0.2s ease;
         }
         .volume-control { display: flex; align-items: center; }
         #playBtn {
@@ -240,10 +273,12 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
+            background: var(--primary-color);
+            color: var(--light-color);
         }
         .song-info { text-align: left; }
-        .song-info h5 { margin-bottom: 0; font-weight: 600; }
-        .song-info small { color: #6c757d; font-size: 0.85rem; }
+        .song-info h5 { margin-bottom: 0; font-weight: 600; color: var(--dark-color); }
+        .song-info small { color: #6b7280; font-size: 0.9rem; }
         .player-controls {
             display: flex;
             justify-content: center;
@@ -253,148 +288,160 @@
         .time-display {
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
-            color: #6c757d;
+            font-size: 0.85rem;
+            color: #6b7280;
             margin-bottom: 10px;
         }
-        .settings-btn {
+        .settings-btn, .prayer-btn {
             position: absolute;
             top: 20px;
-            right: 20px;
             background: var(--secondary-color);
             color: var(--dark-color);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--card-shadow);
             z-index: 10;
-            pointer-events: auto;
+            transition: all 0.3s ease;
         }
-        .prayer-btn {
-            position: absolute;
-            top: 20px;
-            right: 70px;
-            background: var(--accent-color);
-            color: var(--light-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 10;
-            pointer-events: auto;
-        }
+        .settings-btn { right: 20px; }
+        .prayer-btn { right: 75px; background: var(--accent-color); color: var(--light-color); }
+        .settings-btn:hover, .prayer-btn:hover { transform: scale(1.1); }
         .prayer-label {
             position: absolute;
             top: 25px;
-            right: 115px;
-            color: #333;
+            right: 120px;
+            color: var(--dark-color);
             font-size: 14px;
             font-weight: 600;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 2px 8px;
-            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 3px 10px;
+            border-radius: 6px;
             z-index: 9;
-            display: none; /* Mulai dengan disembunyikan */
+            display: none;
+            box-shadow: var(--card-shadow);
         }
-        .prayer-btn:hover + .prayer-label { display: block; } /* Muncul saat hover */
-        .settings-panel {
+        .prayer-btn:hover + .prayer-label { display: block; }
+        .settings-panel, .prayer-panel {
             display: none;
             position: absolute;
-            top: 70px;
-            right: 20px;
-            width: 250px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            z-index: 1000;
-        }
-        .prayer-panel {
-            display: none;
-            position: absolute;
-            top: 70px;
-            right: 70px;
+            top: 75px;
             width: 300px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            padding: 15px;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            padding: 20px;
             z-index: 1000;
+            backdrop-filter: blur(5px);
         }
-        .settings-panel.show, .prayer-panel.show { display: block; }
-        .prayer-pin-input { width: 100%; font-size: 16px; text-align: center; }
-        .prayer-list { max-height: 200px; overflow-y: auto; }
+        .settings-panel { right: 20px; }
+        .prayer-panel { right: 75px; }
+        .settings-panel.show, .prayer-panel.show { display: block; animation: slideIn 0.3s ease; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .prayer-pin-input, .prayer-title-input, .prayer-textarea {
+            width: 100%;
+            font-size: 16px;
+            border-radius: 10px;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+        .prayer-list { max-height: 250px; overflow-y: auto; margin-top: 15px; }
         .prayer-item {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            padding: 10px;
-            background: #f9f9f9;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
         }
-        .prayer-item-text { flex: 1; margin-right: 10px; }
-        .prayer-item small { color: #777; font-size: 12px; }
-        .prayer-item-title { font-size: 16px; font-weight: 600; color: #333; }
-        .prayer-item-content { font-size: 14px; color: #555; }
-        .prayer-item-actions { display: flex; gap: 5px; }
+        .prayer-item:hover {
+            background: #f1f5f9;
+            transform: translateY(-2px);
+        }
+        .prayer-item-text { flex: 1; margin-right: 15px; }
+        .prayer-item small { color: #6b7280; font-size: 12px; }
+        .prayer-item-title { font-size: 16px; font-weight: 600; color: var(--dark-color); }
+        .prayer-item-content { font-size: 14px; color: #4b5563; }
+        .prayer-item-actions { display: flex; gap: 8px; }
         .prayer-item-actions button {
-            padding: 5px 10px;
+            padding: 6px 12px;
             font-size: 12px;
-            border-radius: 5px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
         }
+        .prayer-item-actions button:hover { transform: scale(1.05); }
+
+        /* Modal Delete Confirmation */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.show { display: flex; }
+        .modal-content {
+            background: var(--light-color);
+            border-radius: 15px;
+            padding: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--card-shadow);
+            animation: slideIn 0.3s ease;
+        }
+        .modal-header { border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; }
+        .modal-title { font-size: 20px; font-weight: 600; color: var(--dark-color); }
+        .modal-body { padding: 15px 0; }
+        .modal-footer { border-top: 1px solid #e5e7eb; padding-top: 10px; display: flex; justify-content: flex-end; gap: 10px; }
 
         /* Responsivitas untuk Mobile */
         @media (max-width: 767px) {
-            .sidebar { transform: translateX(-100%); width: 80%; }
+            .sidebar { transform: translateX(-100%); width: 85%; }
             .sidebar.show { transform: translateX(0); }
             .mobile-navbar { display: flex !important; }
-            .card { margin-bottom: 20px; }
-            .input-group { flex-direction: row; flex-wrap: nowrap; align-items: stretch; }
-            .input-group .form-control { flex: 1; margin-right: 10px; height: auto; }
-            .btn-primary, .input-group-text { width: auto; margin-bottom: 0; white-space: nowrap; }
-            header h1 { font-size: 24px; }
-            main { padding-bottom: 100px; }
+            .card { margin-bottom: 25px; }
+            .input-group { flex-direction: row; flex-wrap: nowrap; }
+            .input-group .form-control { flex: 1; margin-right: 10px; }
+            .btn-primary, .input-group-text { width: auto; }
+            header h1 { font-size: 26px; }
+            main { padding-bottom: 120px; }
             .fab { display: none !important; }
             .settings-btn { right: 10px; top: 10px; }
-            .prayer-btn { right: 60px; top: 10px; }
-            .prayer-label { right: 105px; top: 15px; font-size: 12px; }
-            .settings-panel {
-                top: 60px;
-                right: 10px;
-                width: 90%;
-                max-width: 250px;
-            }
-            .prayer-panel {
-                top: 60px;
+            .prayer-btn { right: 65px; top: 10px; }
+            .prayer-label { right: 110px; top: 15px; font-size: 12px; }
+            .settings-panel, .prayer-panel {
+                top: 65px;
                 right: 10px;
                 width: 90%;
                 max-width: 300px;
-                padding: 10px;
+                padding: 15px;
             }
-            .prayer-pin-input { font-size: 14px; padding: 10px; }
-            .prayer-list { max-height: 150px; }
+            .prayer-list { max-height: 180px; }
             .prayer-item { flex-direction: column; align-items: flex-start; }
-            .prayer-item-text { margin-bottom: 5px; }
+            .prayer-item-text { margin-bottom: 10px; }
             .prayer-item-actions { width: 100%; justify-content: flex-end; }
-            .prayer-panel .btn { font-size: 14px; padding: 8px; }
-            .prayer-panel textarea { font-size: 14px; }
         }
     </style>
 </head>
 <body>
     <div class="container-fluid">
-        <header class="text-center py-4">
-            <h1 class="display-4 fw-bold text-white">
+        <header class="text-center">
+            <h1 class="display-4 fw-bold">
                 <i class="fas fa-bible me-2"></i> 
                 <span class="bible-text">APLIKASI ALKITAB SPECIAL</span>
             </h1>
@@ -425,7 +472,7 @@
                     </li>
                 </ul>
                 <div class="text-center mt-4">
-                    <img src="image/favicon.png" alt="Bible" style="width: 80%; opacity: 0.7;" class="animate__animated animate__fadeInUp animate__delay-1s">
+                    <img src="image/favicon.png" alt="Bible" style="width: 80%; opacity: 0.8;" class="animate__animated animate__fadeInUp animate__delay-1s">
                 </div>
             </nav>
             
@@ -437,7 +484,7 @@
                                 <i class="fas fa-cog"></i>
                             </div>
                             <div class="prayer-btn" id="prayerBtn">
-                                <i class="fas fa-pray"></i>
+                                <i class="fas fa-hands-praying"></i>
                             </div>
                             <div class="prayer-label" id="prayerLabel">Doa Privasi</div>
                             <div id="settingsPanel" class="settings-panel">
@@ -470,18 +517,18 @@
                                 <input type="range" id="fontSize" class="form-control mb-2" min="12" max="30" value="18" onchange="applyFontSize()">
                             </div>
                             <div id="prayerPanel" class="prayer-panel">
-                                <h5>Tempat Doa Rahasia</h5>
+                                <h5>Doa Privasi</h5>
                                 <div id="prayerPinSection">
                                     <input type="text" id="prayerPinInput" class="form-control prayer-pin-input mb-2" maxlength="6" placeholder="Masukkan PIN (6 angka)" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                                     <button id="enterPinBtn" class="btn btn-primary w-100 mb-2" onclick="verifyPrayerPin()">Masuk</button>
                                     <button id="setPinBtn" class="btn btn-secondary w-100" onclick="showSetPin()">Buat atau Ganti PIN</button>
                                 </div>
                                 <div id="prayerContent" style="display: none;">
-                                    <input type="text" id="prayerTitleInput" class="form-control mb-2" placeholder="Judul Doa">
-                                    <textarea id="prayerTextArea" class="form-control mb-2" rows="3" placeholder="Isi Doa Anda..."></textarea>
+                                    <input type="text" id="prayerTitleInput" class="form-control prayer-title-input mb-2" placeholder="Judul Doa">
+                                    <textarea id="prayerTextArea" class="form-control prayer-textarea mb-2" rows="3" placeholder="Isi Doa Anda..."></textarea>
                                     <button class="btn btn-success w-100 mb-2" onclick="savePrayer()">Simpan Doa</button>
                                     <div id="prayerList" class="prayer-list"></div>
-                                    <div class="d-flex justify-content-between">
+                                    <div class="d-flex justify-content-between mt-3">
                                         <button class="btn btn-warning" onclick="showChangePin()" title="Ganti PIN">
                                             <i class="fas fa-key"></i>
                                         </button>
@@ -513,7 +560,7 @@
                                     <i class="fas fa-search me-1"></i> Cari
                                 </button>
                             </div>
-                            <div id="searchResult" class="p-4 bg-light rounded bible-text animate__animated"></div>
+                            <div id="searchResult" class="p-4 rounded bible-text animate__animated"></div>
 
                             <h2 class="card-title fw-semibold mb-4 mt-5">
                                 <i class="fas fa-robot me-2"></i>AI Assistant Rohani
@@ -522,12 +569,12 @@
                                 <input type="text" id="aiQuestion" class="form-control" placeholder="Tanyakan tentang Alkitab atau hal rohani...">
                                 <button class="btn btn-primary" onclick="askAI()">Tanya</button>
                             </div>
-                            <div id="aiResponse" class="p-4 bg-light rounded bible-text"></div>
+                            <div id="aiResponse" class="p-4 rounded bible-text"></div>
 
                             <h2 class="card-title fw-semibold mb-4 mt-5">
                                 <i class="fas fa-pray me-2"></i>Doa Harian
                             </h2>
-                            <p id="prayerText" class="p-4 bg-light rounded"></p>
+                            <p id="prayerText" class="p-4 rounded"></p>
                             <button class="btn btn-primary mt-3" onclick="generatePrayer()">Generate Doa Baru</button>
                         </div>
                     </div>
@@ -549,7 +596,7 @@
                                 <div class="spinner"></div>
                                 <p>Mencari ayat spesial untuk Anda...</p>
                             </div>
-                            <div id="verseResult" class="text-center p-4 bg-light rounded bible-text"></div>
+                            <div id="verseResult" class="text-center p-4 rounded bible-text"></div>
                         </div>
                     </div>
                 </div>
@@ -564,7 +611,7 @@
                                 <div class="spinner"></div>
                                 <p>Memuat ayat harian...</p>
                             </div>
-                            <p id="dailyVerse" class="lead bible-text p-4 bg-light rounded"></p>
+                            <p id="dailyVerse" class="lead bible-text p-4 rounded"></p>
                             <div id="audioPlayer" class="d-none">
                                 <div class="music-player">
                                     <div class="card-body">
@@ -655,6 +702,21 @@
         <div class="notification" id="notification">
             <span class="notification-close" onclick="hideNotification()">×</span>
             <div id="notificationContent"></div>
+        </div>
+
+        <div id="deletePrayerModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Konfirmasi Hapus Doa</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah Anda yakin ingin menghapus doa "<span id="deletePrayerTitle"></span>"?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeDeleteModal()">Batal</button>
+                    <button class="btn btn-danger" id="confirmDeleteBtn">Hapus</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1196,11 +1258,11 @@
         function applyTheme() {
             const theme = document.getElementById('themeSelect').value;
             if (theme === 'dark') {
-                document.body.style.background = 'linear-gradient(135deg, #1a1a2e, #16213e)';
+                document.body.style.background = 'linear-gradient(135deg, #111827, #1f2937)';
             } else if (theme === 'light') {
-                document.body.style.background = 'linear-gradient(135deg, #f1c40f, #d4a017)';
+                document.body.style.background = 'linear-gradient(135deg, #fbbf24, #f3e8d6)';
             } else {
-                document.body.style.background = 'linear-gradient(135deg, #2c3e50, #4a69bd)';
+                document.body.style.background = 'linear-gradient(135deg, #1e3a8a, #6b7280)';
             }
             localStorage.setItem('theme', theme);
         }
@@ -1399,7 +1461,7 @@
                         <button class="btn btn-sm btn-outline-primary" onclick="editPrayer(${index})">
                             <i class="fas fa-edit"></i> Edit
                         </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deletePrayer(${index})">
+                        <button class="btn btn-sm btn-outline-danger" onclick="showDeleteModal(${index})">
                             <i class="fas fa-trash"></i> Hapus
                         </button>
                     </div>
@@ -1409,50 +1471,67 @@
 
         function editPrayer(index) {
             const prayer = prayers[index];
-            const newTitle = prompt('Edit judul doa:', prayer.title);
-            const newText = prompt('Edit isi doa:', prayer.text);
-            if (newTitle !== null && newText !== null && newTitle.trim() && newText.trim()) {
-                prayers[index].title = newTitle.trim();
-                prayers[index].text = newText.trim();
-                prayers[index].date = new Date().toLocaleString();
-                localStorage.setItem('prayers', JSON.stringify(prayers));
-                loadPrayers();
-                showNotification('Doa berhasil diedit!', 3000);
-            } else if (newTitle === null || newText === null) {
-                showNotification('Edit doa dibatalkan.', 3000);
-            } else {
-                showNotification('Judul dan isi doa tidak boleh kosong!', 3000);
-            }
+            const prayerTitleInput = document.getElementById('prayerTitleInput');
+            const prayerTextArea = document.getElementById('prayerTextArea');
+            
+            prayerTitleInput.value = prayer.title;
+            prayerTextArea.value = prayer.text;
+            
+            // Hapus doa lama setelah edit
+            prayers.splice(index, 1);
+            localStorage.setItem('prayers', JSON.stringify(prayers));
+            loadPrayers();
+            
+            showNotification('Silakan edit doa, lalu tekan "Simpan Doa" untuk menyimpan perubahan.', 5000);
+        }
+
+        function showDeleteModal(index) {
+            const prayer = prayers[index];
+            const modal = document.getElementById('deletePrayerModal');
+            const titleSpan = document.getElementById('deletePrayerTitle');
+            const confirmBtn = document.getElementById('confirmDeleteBtn');
+            
+            titleSpan.textContent = prayer.title;
+            modal.classList.add('show');
+            
+            // Hapus event listener sebelumnya untuk menghindari duplikat
+            confirmBtn.onclick = null;
+            confirmBtn.onclick = () => deletePrayer(index);
+        }
+
+        function closeDeleteModal() {
+            const modal = document.getElementById('deletePrayerModal');
+            modal.classList.remove('show');
         }
 
         function deletePrayer(index) {
-            if (confirm(`Hapus doa "${prayers[index].title}"?`)) {
-                prayers.splice(index, 1);
-                localStorage.setItem('prayers', JSON.stringify(prayers));
-                loadPrayers();
-                showNotification('Doa berhasil dihapus!', 3000);
-            }
+            prayers.splice(index, 1);
+            localStorage.setItem('prayers', JSON.stringify(prayers));
+            loadPrayers();
+            closeDeleteModal();
+            showNotification('Doa berhasil dihapus!', 3000);
         }
 
-                function logoutPrayer() {
+        function logoutPrayer() {
             isPrayerUnlocked = false;
             document.getElementById('prayerContent').style.display = 'none';
             document.getElementById('prayerPinSection').style.display = 'block';
             document.getElementById('prayerPinInput').value = '';
             document.getElementById('prayerPanel').classList.remove('show');
+            showNotification('Anda telah keluar dari Doa Privasi.', 3000);
         }
 
+        // Event Listeners
         document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
+            link.addEventListener('click', function(e) {
                 e.preventDefault();
-                const section = link.getAttribute('data-section');
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                const section = this.getAttribute('data-section');
                 document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
                 document.getElementById(section).classList.add('active');
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
-                if (window.innerWidth < 768) {
-                    document.querySelector('.sidebar').classList.remove('show');
-                }
+                if (section === 'history') updateHistory();
+                if (section === 'daily') loadDailyVerse();
             });
         });
 
@@ -1460,86 +1539,47 @@
             document.querySelector('.sidebar').classList.toggle('show');
         });
 
-        window.onload = async () => {
+        document.getElementById('settingsBtn').addEventListener('click', () => {
+            document.getElementById('settingsPanel').classList.toggle('show');
+            document.getElementById('prayerPanel').classList.remove('show');
+        });
+
+        document.getElementById('prayerBtn').addEventListener('click', togglePrayerPanel);
+
+        // Initialization
+        window.addEventListener('load', () => {
+            loadDailyVerse();
             updateHistory();
-            await loadDailyVerse();
-            
-            setInterval(async () => {
-                const now = new Date().getTime();
-                const oneDay = 24 * 60 * 60 * 1000;
-                if (dailyVerseData && (now - dailyVerseData.timestamp > oneDay)) {
-                    await loadDailyVerse(true);
-                }
-            }, 60000);
-
+            applyTheme();
+            applyCustomBackground();
+            applyFont();
+            applyFontSize();
             const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.getElementById('themeSelect').value = savedTheme;
-                applyTheme();
-            }
-
-            const savedBackground = localStorage.getItem('customBackground');
-            if (savedBackground) {
-                document.getElementById('customBackground').value = savedBackground;
-                applyCustomBackground();
-            }
-
+            if (savedTheme) document.getElementById('themeSelect').value = savedTheme;
+            const savedColor = localStorage.getItem('customBackground');
+            if (savedColor) document.getElementById('customBackground').value = savedColor;
             const savedFont = localStorage.getItem('font');
-            if (savedFont) {
-                document.getElementById('fontSelect').value = savedFont;
-                applyFont();
-            }
-
+            if (savedFont) document.getElementById('fontSelect').value = savedFont;
             const savedFontSize = localStorage.getItem('fontSize');
             if (savedFontSize) {
                 document.getElementById('fontSize').value = savedFontSize;
                 applyFontSize();
             }
+        });
 
-            document.getElementById('settingsBtn').addEventListener('click', () => {
-                document.getElementById('settingsPanel').classList.toggle('show');
-            });
-
-            document.getElementById('prayerBtn').addEventListener('click', togglePrayerPanel);
-
-            document.addEventListener('click', (e) => {
-                const settingsPanel = document.getElementById('settingsPanel');
-                const settingsBtn = document.getElementById('settingsBtn');
-                const prayerPanel = document.getElementById('prayerPanel');
-                const prayerBtn = document.getElementById('prayerBtn');
-
-                if (!settingsPanel.contains(e.target) && !settingsBtn.contains(e.target)) {
-                    settingsPanel.classList.remove('show');
-                }
-                if (!prayerPanel.contains(e.target) && !prayerBtn.contains(e.target)) {
-                    prayerPanel.classList.remove('show');
-                }
-            });
-
-            document.getElementById('searchInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') searchBible();
-            });
-
-            document.getElementById('aiQuestion').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') askAI();
-            });
-
-            document.getElementById('nameInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') matchNameToVerse();
-            });
-
-            document.getElementById('prayerPinInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') verifyPrayerPin();
-            });
-
-            document.getElementById('prayerTitleInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') savePrayer();
-            });
-
-            document.getElementById('prayerTextArea').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && e.ctrlKey) savePrayer();
-            });
-        };
+        // Handle Enter key for inputs
+        document.getElementById('searchInput').addEventListener('keypress', e => {
+            if (e.key === 'Enter') searchBible();
+        });
+        document.getElementById('nameInput').addEventListener('keypress', e => {
+            if (e.key === 'Enter') matchNameToVerse();
+        });
+        document.getElementById('aiQuestion').addEventListener('keypress', e => {
+            if (e.key === 'Enter') askAI();
+        });
+        document.getElementById('prayerPinInput').addEventListener('keypress', e => {
+            if (e.key === 'Enter') verifyPrayerPin();
+        });
     </script>
 </body>
 </html>
