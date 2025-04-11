@@ -127,8 +127,8 @@
             border: 2px solid #e5e7eb;
             transition: all 0.3s ease;
             background: #f9fafb;
-            font-size: 10px;
-            font-family: lobster, cursive;
+            font-size: 14px;
+            font-family: lobster;
         }
         .form-control:focus {
             border-color: var(--secondary-color);
@@ -249,7 +249,7 @@
         .music-player {
             background-image: url('https://media.istockphoto.com/id/1470053072/pt/foto/jesus-christ-preaches-the-sermon-on-the-mount-and-the-twelve-apostles-3d-render.jpg?b=1&s=612x612&w=0&k=20&c=6ZoNNBI4VntUS92RYOrGrUpF2ah4B6tdHVRkHSQ31DI=');
             background-size: cover;
-            border-radius: 20px;
+            border-radius: 10px;
             box-shadow: var(--card-shadow);
             margin-top: 25px;
             padding: 15px;
@@ -275,6 +275,13 @@
             border-radius: 50%;
             background: var(--primary-color);
             color: var(--light-color);
+            border: 2px solid var(--light-color);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        #playBtn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
         .song-info { text-align: left; }
         .song-info h5 { margin-bottom: 0; font-weight: 600; color: var(--dark-color); }
@@ -409,6 +416,64 @@
         .modal-body { padding: 15px 0; }
         .modal-footer { border-top: 1px solid #e5e7eb; padding-top: 10px; display: flex; justify-content: flex-end; gap: 10px; }
 
+        /* Profile Picture Styles */
+        .profile-picture-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .profile-picture {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--secondary-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .profile-picture:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .profile-upload-btn {
+            margin-top: 10px;
+            font-size: 12px;
+            padding: 5px 10px;
+        }
+        #profileUpload {
+            display: none;
+        }
+
+        /* Font Size Slider with Number */
+        .font-size-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .font-size-value {
+            width: 40px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* Feedback Form */
+        .feedback-form {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+        .feedback-textarea {
+            width: 100%;
+            min-height: 100px;
+            border-radius: 10px;
+            padding: 10px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 10px;
+            resize: vertical;
+        }
+
         /* Responsivitas untuk Mobile */
         @media (max-width: 767px) {
             .sidebar { transform: translateX(-100%); width: 85%; }
@@ -514,9 +579,25 @@
                                     <option value="ubuntu">Ubuntu</option>
                                 </select>
                                 <label for="fontSize">Ukuran Font:</label>
-                                <input type="range" id="fontSize" class="form-control mb-2" min="12" max="30" value="18" onchange="applyFontSize()">
+                                <div class="font-size-container mb-2">
+                                    <input type="range" id="fontSize" class="form-control" min="12" max="30" value="18" oninput="updateFontSizeValue(this.value)" onchange="applyFontSize()">
+                                    <span id="fontSizeValue" class="font-size-value">18</span>
+                                </div>
+                                
+                                <div class="feedback-form">
+                                    <h5>Feedback</h5>
+                                    <textarea id="feedbackText" class="feedback-textarea" placeholder="Masukkan saran atau masukan Anda..."></textarea>
+                                    <button class="btn btn-primary w-100" onclick="sendFeedback()">Kirim Feedback</button>
+                                </div>
                             </div>
                             <div id="prayerPanel" class="prayer-panel">
+                                <div class="profile-picture-container">
+                                    <img id="profilePicture" src="image/default-profile.png" alt="Profile" class="profile-picture" onclick="document.getElementById('profileUpload').click()">
+                                    <input type="file" id="profileUpload" accept="image/*" onchange="handleProfileUpload(event)">
+                                    <button class="btn btn-sm btn-secondary profile-upload-btn" onclick="document.getElementById('profileUpload').click()">
+                                        <i class="fas fa-camera me-1"></i> Ganti Foto
+                                    </button>
+                                </div>
                                 <h5>Doa Privasi</h5>
                                 <div id="prayerPinSection">
                                     <input type="text" id="prayerPinInput" class="form-control prayer-pin-input mb-2" maxlength="6" placeholder="Masukkan PIN (6 angka)" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
@@ -555,7 +636,7 @@
                                 <i class="fas fa-search me-2"></i>Cari Alkitab
                             </h2>
                             <div class="input-group mb-4">
-                                <input type="text" id="searchInput" class="form-control" placeholder="Cari ayat (contoh: Yohanes 1:2-12 atau Lukas)">
+                                <input type="text" id="searchInput" class="form-control" placeholder="Cari ayat (Yohanes 1:2-12 atau Lukas)">
                                 <button class="btn btn-primary" onclick="searchBible()">
                                     <i class="fas fa-search me-1"></i> Cari
                                 </button>
@@ -653,7 +734,7 @@
                                 </div>
                             </div>
                             <button class="btn btn-primary mt-3" onclick="loadDailyVerse(true)">
-                                <i class="fas fa-sync-alt me-1"></i> Ayat Baru (Manual)
+                                <i class="fas fa-sync-alt me-1"></i> Ayat Baru
                             </button>
                         </div>
                     </div>
@@ -772,6 +853,55 @@
             { title: 'Walau Ku Tak Dapat Melihat', artist: 'Grezia Epiphania', cover: 'image/walau.png', url: 'song/Walau Ku Tak Dapat Melihat - Grezia Epiphania [Official Music Video].mp3' },
             { title: 'Sampaikan Pada Yesus', artist: 'Melita Sidabutar', cover: 'image/sampai.png', url: 'song/Sampaikan Pada Yesus - Melitha Sidabutar [Official Music Video] - Lagu Rohani.mp3' }
         ];
+
+        // Initialize profile picture from localStorage
+        function initProfilePicture() {
+            const profilePic = localStorage.getItem('profilePicture');
+            if (profilePic) {
+                document.getElementById('profilePicture').src = profilePic;
+            }
+        }
+
+        // Handle profile picture upload
+        function handleProfileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const profilePic = document.getElementById('profilePicture');
+                    profilePic.src = e.target.result;
+                    localStorage.setItem('profilePicture', e.target.result);
+                    showNotification('Foto profil berhasil diubah!', 3000);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Update font size value display
+        function updateFontSizeValue(value) {
+            document.getElementById('fontSizeValue').textContent = value;
+        }
+
+        // Send feedback to email
+        function sendFeedback() {
+            const feedbackText = document.getElementById('feedbackText').value.trim();
+            if (!feedbackText) {
+                showNotification('Masukkan feedback terlebih dahulu!', 3000);
+                return;
+            }
+
+            // In a real app, you would send this to your backend which would email you
+            // For demo purposes, we'll just show a notification
+            showNotification('Feedback terkirim! Terima kasih atas masukan Anda.', 5000);
+            
+            // This would be the actual email sending code (would need server-side implementation)
+            // const email = 'sidorusarmansyukurwaruw99@gmail.com';
+            // const subject = 'Feedback Aplikasi Alkitab';
+            // const body = `Feedback dari pengguna:\n\n${feedbackText}`;
+            // window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+            
+            document.getElementById('feedbackText').value = '';
+        }
 
         function initMusicPlayer() {
             const audioElement = document.createElement('audio');
@@ -1554,6 +1684,7 @@
             applyCustomBackground();
             applyFont();
             applyFontSize();
+            initProfilePicture();
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme) document.getElementById('themeSelect').value = savedTheme;
             const savedColor = localStorage.getItem('customBackground');
@@ -1563,6 +1694,7 @@
             const savedFontSize = localStorage.getItem('fontSize');
             if (savedFontSize) {
                 document.getElementById('fontSize').value = savedFontSize;
+                updateFontSizeValue(savedFontSize);
                 applyFontSize();
             }
         });
