@@ -501,6 +501,76 @@
             .prayer-item-text { margin-bottom: 10px; }
             .prayer-item-actions { width: 100%; justify-content: flex-end; }
         }
+        .feedback-textarea {
+    min-height: 120px;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875em;
+    margin-top: 0.25rem;
+}
+
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+.spinner-border {
+    vertical-align: middle;
+    margin-left: 5px;
+}
+/* Tambahkan di bagian CSS Anda */
+.feedback-form {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.feedback-form label {
+    font-weight: 600;
+    color: #1e3a8a;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.feedback-textarea {
+    min-height: 120px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.15s ease-in-out;
+}
+
+.feedback-textarea:focus {
+    border-color: #1e3a8a;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(30, 58, 138, 0.25);
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875em;
+    margin-top: 0.25rem;
+    display: none;
+}
+
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+#submitSpinner {
+    display: none;
+    margin-left: 8px;
+}
+
+pre {
+    font-family: 'Courier New', monospace;
+    background-color: #f1f1f1;
+    padding: 8px;
+    border-radius: 4px;
+}
     </style>
 </head>
 <body>
@@ -586,8 +656,35 @@
                                 
                                 <div class="feedback-form">
                                     <h5>Feedback</h5>
-                                    <textarea id="feedbackText" class="feedback-textarea" placeholder="Masukkan saran atau masukan Anda..."></textarea>
-                                    <button class="btn btn-primary w-100" onclick="sendFeedback()">Kirim Feedback</button>
+                                    
+                                    <!-- Form Input Nama -->
+                                    <div class="mb-3">
+                                        <label for="feedbackName" class="form-label">Nama Anda</label>
+                                        <input type="text" id="feedbackName" class="form-control" placeholder="Masukkan nama Anda">
+                                        <div id="nameError" class="invalid-feedback" style="display: none;">Harap masukkan nama Anda</div>
+                                    </div>
+                                    
+                                    <!-- Form Input Email -->
+                                    <div class="mb-3">
+                                        <label for="feedbackEmail" class="form-label">Email</label>
+                                        <input type="email" id="feedbackEmail" class="form-control" placeholder="Masukkan email Anda">
+                                        <div id="emailError" class="invalid-feedback" style="display: none;">
+                                            <span id="emailErrorMessage">Harap masukkan email yang valid</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Textarea Feedback -->
+                                    <div class="mb-3">
+                                        <label for="feedbackText" class="form-label">Pesan Feedback</label>
+                                        <textarea id="feedbackText" class="form-control feedback-textarea" rows="4" placeholder="Masukkan saran atau masukan Anda..."></textarea>
+                                        <div id="messageError" class="invalid-feedback" style="display: none;">Harap masukkan pesan feedback</div>
+                                    </div>
+                                    
+                                    <!-- Tombol Kirim -->
+                                    <button class="btn btn-primary w-100" onclick="validateAndSendFeedback()">
+                                        <span id="submitText">Kirim Feedback</span>
+                                        <span id="submitSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                    </button>
                                 </div>
                             </div>
                             <div id="prayerPanel" class="prayer-panel">
@@ -800,6 +897,13 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+    // Inisialisasi EmailJS dengan Public Key Anda
+    (function() {
+        emailjs.init('--n5sicBoeZSo_nJg'); // Public Key Anda
+    })();
+</script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -883,25 +987,237 @@
         }
 
         // Send feedback to email
-        function sendFeedback() {
-            const feedbackText = document.getElementById('feedbackText').value.trim();
-            if (!feedbackText) {
-                showNotification('Masukkan feedback terlebih dahulu!', 3000);
-                return;
-            }
+        function validateAndSendFeedback() {
+    // Ambil nilai input
+    const name = document.getElementById('feedbackName').value.trim();
+    const email = document.getElementById('feedbackEmail').value.trim();
+    const message = document.getElementById('feedbackText').value.trim();
+    
+    // Reset error messages
+    resetValidationErrors();
 
-            // In a real app, you would send this to your backend which would email you
-            // For demo purposes, we'll just show a notification
-            showNotification('Feedback terkirim! Terima kasih atas masukan Anda.', 5000);
-            
-            // This would be the actual email sending code (would need server-side implementation)
-            // const email = 'sidorusarmansyukurwaruw99@gmail.com';
-            // const subject = 'Feedback Aplikasi Alkitab';
-            // const body = `Feedback dari pengguna:\n\n${feedbackText}`;
-            // window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
-            
-            document.getElementById('feedbackText').value = '';
+    // Validasi
+    if (!validateForm(name, email, message)) {
+        return;
+    }
+
+    // Tampilkan loading state
+    showLoadingState(true);
+
+    // Dapatkan lokasi pengirim (jika diizinkan)
+    getLocation()
+        .then(location => {
+            const deviceInfo = detectDevice();
+            const locationInfo = location 
+                ? `Lokasi: ${location.city}, ${location.region}, ${location.country} (${location.loc})`
+                : "Lokasi: Tidak diizinkan/tidak terdeteksi";
+
+            const templateParams = {
+                name: name,
+                email: email,
+                message: message,
+                date: new Date().toLocaleString('id-ID', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }),
+                device_info: `${deviceInfo}\n${locationInfo}`,
+                ip_address: "Sedang diproses..." // Akan diupdate via callback
+            };
+
+            // Dapatkan alamat IP dan update templateParams
+            getIPAddress()
+                .then(ip => {
+                    templateParams.ip_address = ip;
+                })
+                .finally(() => {
+                    sendEmail(templateParams);
+                });
+        })
+        .catch(error => {
+            console.error("Gagal mendapatkan lokasi:", error);
+            proceedWithoutLocation(name, email, message);
+        });
+}
+
+// Fungsi untuk mendapatkan lokasi geografis
+function getLocation() {
+    return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+            reject("Geolocation tidak didukung");
+            return;
         }
+
+        navigator.geolocation.getCurrentPosition(
+            async position => {
+                try {
+                    const { latitude, longitude } = position.coords;
+                    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                    const data = await response.json();
+                    
+                    resolve({
+                        city: data.address.city || data.address.town || data.address.village,
+                        region: data.address.state || data.address.region,
+                        country: data.address.country,
+                        loc: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`
+                    });
+                } catch (error) {
+                    reject(error);
+                }
+            },
+            error => {
+                reject(error.message);
+            },
+            { timeout: 5000 }
+        );
+    });
+}
+
+// Fungsi untuk mendapatkan alamat IP
+function getIPAddress() {
+    return fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => data.ip)
+        .catch(() => "Tidak terdeteksi");
+}
+
+// Fungsi utama pengiriman email
+function sendEmail(templateParams) {
+    emailjs.send('service_zh33mhy', 'template_n6y3yi9', templateParams)
+        .then(response => {
+            showNotification('success', 'Feedback terkirim! Terima kasih.');
+            resetForm();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            handleEmailError(error, templateParams.email);
+        })
+        .finally(() => {
+            showLoadingState(false);
+        });
+}
+
+// Fungsi-fungsi pendukung
+function validateForm(name, email, message) {
+    let isValid = true;
+
+    if (!name) {
+        showError('nameError', 'Harap masukkan nama Anda');
+        isValid = false;
+    }
+    
+    if (!email) {
+        showError('emailError', 'Harap masukkan email Anda');
+        isValid = false;
+    } else if (!validateEmail(email)) {
+        showError('emailError', 'Format email tidak valid');
+        isValid = false;
+    }
+    
+    if (!message) {
+        showError('messageError', 'Harap masukkan pesan feedback');
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}
+
+function resetValidationErrors() {
+    ['nameError', 'emailError', 'messageError'].forEach(id => {
+        document.getElementById(id).style.display = 'none';
+    });
+    document.getElementById('feedbackEmail').classList.remove('is-invalid');
+}
+
+function showError(elementId, message) {
+    const element = document.getElementById(elementId);
+    element.textContent = message;
+    element.style.display = 'block';
+    
+    if (elementId === 'emailError') {
+        document.getElementById('feedbackEmail').classList.add('is-invalid');
+    }
+}
+
+function showLoadingState(show) {
+    document.getElementById('submitText').textContent = show ? 'Mengirim...' : 'Kirim Feedback';
+    document.getElementById('submitSpinner').style.display = show ? 'inline-block' : 'none';
+    document.querySelector('.feedback-form button').disabled = show;
+}
+
+function showNotification(type, message) {
+    const icon = type === 'success' ? 'fa-check-circle text-success' : 'fa-times-circle text-danger';
+    alert(message); // Ganti dengan notifikasi custom Anda
+}
+
+function resetForm() {
+    ['feedbackName', 'feedbackEmail', 'feedbackText'].forEach(id => {
+        document.getElementById(id).value = '';
+    });
+}
+
+function detectDevice() {
+    const ua = navigator.userAgent;
+    let deviceType = "Desktop";
+    
+    if (/Mobi|Android|iPhone|iPad|iPod/i.test(ua)) {
+        deviceType = "Mobile";
+    } else if (/Tablet|iPad/i.test(ua)) {
+        deviceType = "Tablet";
+    }
+    
+    return `Perangkat: ${deviceType}\nBrowser: ${navigator.appName}\nOS: ${navigator.platform}`;
+}
+
+function proceedWithoutLocation(name, email, message) {
+    const deviceInfo = detectDevice();
+    const templateParams = {
+        name: name,
+        email: email,
+        message: message,
+        date: new Date().toLocaleString('id-ID', dateOptions),
+        device_info: `${deviceInfo}\nLokasi: Tidak terdeteksi`,
+        ip_address: "Tidak terdeteksi"
+    };
+    
+    getIPAddress().then(ip => {
+        templateParams.ip_address = ip;
+    }).finally(() => {
+        sendEmail(templateParams);
+    });
+}
+
+// Fungsi helper untuk notification dengan return ID
+function showNotification(message, duration) {
+    const notification = document.getElementById('notification');
+    const content = document.getElementById('notificationContent');
+    content.innerHTML = message;
+    notification.classList.add('show');
+    
+    let timeoutId;
+    if (duration > 0) {
+        timeoutId = setTimeout(() => {
+            notification.classList.remove('show');
+        }, duration);
+    }
+    
+    return { notification, timeoutId };
+}
+
+function hideNotification(notificationObj) {
+    if (notificationObj.timeoutId) {
+        clearTimeout(notificationObj.timeoutId);
+    }
+    notificationObj.notification.classList.remove('show');
+}
 
         function initMusicPlayer() {
             const audioElement = document.createElement('audio');
